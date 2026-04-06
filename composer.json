@@ -1,0 +1,27 @@
+{
+    "name": "zen/framework",
+    "description": "A clean, modern, backend-first PHP framework with built-in dynamic UI",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zen\\": "core/",
+            "Zen\\Boot\\": "boot/",
+            "App\\": "app/"
+        },
+        "files": [
+            "core/Support/helpers.php"
+        ]
+    },
+    "bin": ["zen"],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

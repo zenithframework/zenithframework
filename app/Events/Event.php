@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Events;
+
+abstract class Event
+{
+    public function broadcastOn(): array
+    {
+        return [];
+    }
+}

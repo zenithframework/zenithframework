@@ -1,0 +1,157 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+define('ZEN_START', microtime(true));
+
+require_once __DIR__ . '/boot/Ignition.php';
+
+use Zen\Boot\Ignition;
+
+// Make Commands
+use Zen\Console\Commands\MakePage;
+use Zen\Console\Commands\MakeComponent;
+use Zen\Console\Commands\MakeMiddleware;
+use Zen\Console\Commands\MakeController;
+use Zen\Console\Commands\MakeModel;
+use Zen\Console\Commands\MakeService;
+use Zen\Console\Commands\MakeMigration;
+use Zen\Console\Commands\MakeProvider;
+use Zen\Console\Commands\MakeSeeder;
+use Zen\Console\Commands\MakeFactory;
+use Zen\Console\Commands\MakeLayout;
+use Zen\Console\Commands\MakeRequest;
+use Zen\Console\Commands\MakeJob;
+use Zen\Console\Commands\MakeEvent;
+use Zen\Console\Commands\MakeListener;
+
+// Remove Commands
+use Zen\Console\Commands\RemoveModel;
+use Zen\Console\Commands\RemoveController;
+use Zen\Console\Commands\RemoveMiddleware;
+use Zen\Console\Commands\RemoveMigration;
+use Zen\Console\Commands\RemoveSeeder;
+use Zen\Console\Commands\RemoveFactory;
+use Zen\Console\Commands\RemoveService;
+use Zen\Console\Commands\RemoveProvider;
+use Zen\Console\Commands\RemovePage;
+use Zen\Console\Commands\RemoveComponent;
+use Zen\Console\Commands\RemoveLayout;
+use Zen\Console\Commands\RemoveRequest;
+
+// Rename Commands
+use Zen\Console\Commands\RenameModel;
+use Zen\Console\Commands\RenameController;
+use Zen\Console\Commands\RenameService;
+
+// Additional Commands
+use Zen\Console\Commands\ClassResolve;
+use Zen\Console\Commands\Migrate;
+use Zen\Console\Commands\DbSeed;
+use Zen\Console\Commands\CacheClear;
+use Zen\Console\Commands\RouteList;
+use Zen\Console\Commands\Serve;
+use Zen\Console\Commands\Lint;
+use Zen\Console\Commands\Test;
+
+$app = Ignition::fire();
+
+$commands = [
+    // Make Commands
+    'make:page' => MakePage::class,
+    'make:component' => MakeComponent::class,
+    'make:middleware' => MakeMiddleware::class,
+    'make:controller' => MakeController::class,
+    'make:model' => MakeModel::class,
+    'make:service' => MakeService::class,
+    'make:migration' => MakeMigration::class,
+    'make:provider' => MakeProvider::class,
+    'make:seeder' => MakeSeeder::class,
+    'make:factory' => MakeFactory::class,
+    'make:layout' => MakeLayout::class,
+    'make:request' => MakeRequest::class,
+    'make:job' => MakeJob::class,
+    'make:event' => MakeEvent::class,
+    'make:listener' => MakeListener::class,
+
+    // Remove Commands
+    'remove:model' => RemoveModel::class,
+    'remove:controller' => RemoveController::class,
+    'remove:middleware' => RemoveMiddleware::class,
+    'remove:migration' => RemoveMigration::class,
+    'remove:seeder' => RemoveSeeder::class,
+    'remove:factory' => RemoveFactory::class,
+    'remove:service' => RemoveService::class,
+    'remove:provider' => RemoveProvider::class,
+    'remove:page' => RemovePage::class,
+    'remove:component' => RemoveComponent::class,
+    'remove:layout' => RemoveLayout::class,
+    'remove:request' => RemoveRequest::class,
+
+    // Rename Commands
+    'rename:model' => RenameModel::class,
+    'rename:controller' => RenameController::class,
+    'rename:service' => RenameService::class,
+
+    // Additional Commands
+    'class:resolve' => ClassResolve::class,
+    'migrate' => Migrate::class,
+    'migrate:rollback' => Migrate::class,
+    'migrate:fresh' => Migrate::class,
+    'db:seed' => DbSeed::class,
+    'cache:clear' => CacheClear::class,
+    'route:list' => RouteList::class,
+    'serve' => Serve::class,
+    'lint' => Lint::class,
+    'test' => Test::class,
+];
+
+if (PHP_SAPI !== 'cli') {
+    exit(1);
+}
+
+array_shift($argv);
+
+if (empty($argv)) {
+    echo "Zen Framework CLI\n";
+    echo "================\n\n";
+    echo "Usage:\n";
+    echo "  php zen <command> [options]\n\n";
+    echo "Available commands:\n";
+    
+    $categories = [
+        'Make Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'make:'), ARRAY_FILTER_USE_KEY),
+        'Remove Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'remove:'), ARRAY_FILTER_USE_KEY),
+        'Rename Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'rename:'), ARRAY_FILTER_USE_KEY),
+        'Database Commands' => ['migrate', 'migrate:rollback', 'migrate:fresh', 'db:seed'],
+        'Other Commands' => ['cache:clear', 'route:list', 'serve', 'class:resolve', 'lint', 'test'],
+    ];
+    
+    foreach ($categories as $category => $cmds) {
+        echo "\n{$category}:\n";
+        foreach ($cmds as $name) {
+            echo "  {$name}\n";
+        }
+    }
+    
+    exit(0);
+}
+
+$commandName = $argv[0];
+$arguments = array_slice($argv, 1);
+
+if (!isset($commands[$commandName])) {
+    echo "Command '{$commandName}' not found.\n";
+    exit(1);
+}
+
+$commandClass = $commands[$commandName];
+
+if (!class_exists($commandClass)) {
+    echo "Command class '{$commandClass}' not found.\n";
+    exit(1);
+}
+
+$command = new $commandClass();
+$command->handle($app, $arguments);
