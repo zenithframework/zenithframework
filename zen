@@ -107,6 +107,8 @@ $commands = [
     'migrate' => Migrate::class,
     'migrate:rollback' => Migrate::class,
     'migrate:fresh' => Migrate::class,
+    'migrate:refresh' => Migrate::class,
+    'migrate:reset' => Migrate::class,
     'db:seed' => DbSeed::class,
     'cache:clear' => CacheClear::class,
     'optimize:clear' => OptimizeClear::class,
@@ -138,7 +140,7 @@ if (empty($argv)) {
         'Make Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'make:'), ARRAY_FILTER_USE_KEY),
         'Remove Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'remove:'), ARRAY_FILTER_USE_KEY),
         'Rename Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'rename:'), ARRAY_FILTER_USE_KEY),
-        'Database Commands' => ['migrate', 'migrate:rollback', 'migrate:fresh', 'db:seed'],
+        'Database Commands' => ['migrate', 'migrate:rollback', 'migrate:refresh', 'migrate:fresh', 'migrate:reset', 'db:seed'],
         'Route Commands' => ['route:list', 'route:cache', 'route:test', 'route:fix', 'route:convert', 'api:test'],
         'Other Commands' => ['cache:clear', 'serve', 'class:resolve', 'lint', 'test'],
     ];

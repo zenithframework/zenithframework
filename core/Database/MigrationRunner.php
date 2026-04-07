@@ -163,4 +163,23 @@ class MigrationRunner
     {
         $this->migrationPath = $path;
     }
+
+    public function fresh(): void
+    {
+        $qb = new QueryBuilder();
+        $pdo = $qb->raw("SELECT name FROM sqlite_master WHERE type='table' AND name<>'sqlite_sequence' AND name<>'migrations'");
+
+        $tables = [];
+        while ($row = $pdo->fetch(\PDO::FETCH_ASSOC)) {
+            $tables[] = $row['name'];
+        }
+
+        foreach ($tables as $table) {
+            $qb->raw("DROP TABLE IF EXISTS {$table}");
+        }
+
+        $qb->raw("DELETE FROM {$this->tableName}");
+
+        echo "Dropped all tables.\n";
+    }
 }
