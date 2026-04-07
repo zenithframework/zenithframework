@@ -5,3 +5,4 @@ vendor/
 *.sqlite
 .env
 .DS_Store
+.kilo/
