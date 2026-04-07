@@ -12,21 +12,40 @@ A comprehensive guide to building applications with Zen Framework.
 6. [Models & ORM](#models--orm)
 7. [Database & Migrations](#database--migrations)
 8. [Views & Templates](#views--templates)
-9. [Session & Auth](#session--auth)
-10. [Validation](#validation)
-11. [Cache](#cache)
-12. [CLI Commands](#cli-commands)
-13. [REST API Development](#rest-api-development)
-14. [Deployment](#deployment)
+9. [Template Engine](#template-engine)
+10. [Session & Auth](#session--auth)
+11. [Validation](#validation)
+12. [Cache](#cache)
+13. [CLI Commands](#cli-commands)
+14. [REST API Development](#rest-api-development)
+15. [Deployment](#deployment)
 
 ---
 
 ## Installation
 
+### Option 1: Using zen new (Recommended)
+
 ```bash
 # Create new project
-composer create-project zen/framework my-project
+php zen new my-project
+
+# Navigate to project
 cd my-project
+
+# Start development server
+php zen serve
+```
+
+### Option 2: Manual Clone
+
+```bash
+# Clone repository
+git clone https://github.com/zenithframework/zenithframework.git my-project
+cd my-project
+
+# Install dependencies
+# (if using composer)
 
 # Start development server
 php zen serve
@@ -377,6 +396,170 @@ return $layout->render();
 php zen make:component Button
 php zen make:component Input
 ```
+
+---
+
+## Template Engine
+
+Zen Framework includes a powerful template engine with `.zen.php` files. It supports layouts, components, and all modern templating features.
+
+### Template Files
+
+Templates use `.zen.php` extension and go in `views/`:
+```
+views/
+├── layouts/
+│   └── main.zen.php
+├── pages/
+│   └── home.zen.php
+└── components/
+    └── button.zen.php
+```
+
+### Variables
+
+```php
+// In PHP controller
+return view('pages.home', ['name' => 'John', 'items' => [1, 2, 3]]);
+
+// In template
+{{ $name }}           // Escaped output
+{!! $html !!}         // Raw output (unescaped)
+```
+
+### Conditionals
+
+```php
+@if($isActive)
+    <p>User is active</p>
+@elseif($isPending)
+    <p>User is pending</p>
+@else
+    <p>User is inactive</p>
+@endif
+
+@unless($isLoggedIn)
+    <p>Please log in</p>
+@endunless
+```
+
+### Loops
+
+```php
+@foreach($items as $item)
+    <li>{{ $item }}</li>
+@endforeach
+
+@for($i = 0; $i < 10; $i++)
+    <p>Count: {{ $i }}</p>
+@endfor
+
+@while($count > 0)
+    <p>{{ $count }}</p>
+    @php $count-- @endphp
+@endwhile
+```
+
+### Layout Inheritance
+
+```php
+// child.zen.php
+@extends('layouts.main')
+
+@section('title', 'Page Title')
+
+@section('content')
+    <h1>Welcome</h1>
+    <p>This is the page content</p>
+@endsection
+```
+
+```php
+// layouts/main.zen.php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@yield('title', 'Default Title')</title>
+</head>
+<body>
+    <header>Header</header>
+    
+    <main>
+        @yield('content')
+    </main>
+    
+    <footer>Footer</footer>
+</body>
+</html>
+```
+
+### Include Partial Templates
+
+```php
+@include('components.header')
+@includeIf('components.sidebar')
+@includeWhen($showSidebar, 'components.sidebar')
+```
+
+### Components (Zen Tags)
+
+```php
+// Self-closing
+<zen:Button type="primary">Click Me</zen:Button>
+<zen:Card />
+
+// With content
+<zen:Card>
+    <p>Card content here</p>
+</zen:Card>
+```
+
+### Form Directives
+
+```php
+<form method="POST" action="/users">
+    @csrf
+    @method('PUT')
+    
+    <input type="text" name="name" value="{{ old('name') }}">
+    
+    @json($data)
+</form>
+```
+
+### Auth Directives
+
+```php
+@auth
+    <p>Welcome, {{ Auth::user()->name }}</p>
+@endauth
+
+@guest
+    <p>Please log in</p>
+@endguest
+```
+
+### PHP Directives
+
+```php
+@php
+    $now = date('Y');
+    $items = ['a', 'b', 'c'];
+@endphp
+```
+
+### Template Caching
+
+In production, compiled templates are cached for better performance:
+
+```php
+// config/app.php
+return [
+    'cache' => true,  // Enable template caching
+];
+```
+
+Cache location: `storage/framework/views/`
 
 ---
 

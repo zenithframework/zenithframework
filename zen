@@ -46,6 +46,7 @@ use Zen\Console\Commands\RenameController;
 use Zen\Console\Commands\RenameService;
 
 // Additional Commands
+use Zen\Console\Commands\MakeProject;
 use Zen\Console\Commands\ClassResolve;
 use Zen\Console\Commands\Migrate;
 use Zen\Console\Commands\DbSeed;
@@ -101,6 +102,7 @@ $commands = [
     'rename:service' => RenameService::class,
 
     // Additional Commands
+    'new' => MakeProject::class,
     'class:resolve' => ClassResolve::class,
     'migrate' => Migrate::class,
     'migrate:rollback' => Migrate::class,

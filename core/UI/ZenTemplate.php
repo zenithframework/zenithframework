@@ -17,7 +17,7 @@ class ZenTemplate
     public function __construct()
     {
         $this->viewsPath = dirname(__DIR__, 2) . '/views';
-        $this->cachePath = dirname(__DIR__, 2) . '/storage/framework/views';
+        $this->cachePath = dirname(__DIR__, 3) . '/boot/cache/views';
         
         if (!is_dir($this->cachePath)) {
             mkdir($this->cachePath, 0755, true);
@@ -47,11 +47,32 @@ class ZenTemplate
         $content = file_get_contents($file);
         
         if ($this->hasDirectives($content)) {
-            $compiled = TemplateDirectives::compile($content);
+            $compiled = $this->getCompiled($file, $content);
             return $this->evalTemplate($compiled);
         }
         
         return $this->renderFile($file);
+    }
+
+    protected function getCompiled(string $templateFile, string $content): string
+    {
+        $templateName = basename($templateFile, '.zen.php');
+        $cacheFile = $this->cachePath . '/' . $templateName . '.php';
+        
+        $templateMtime = filemtime($templateFile);
+        
+        if (file_exists($cacheFile)) {
+            $cacheMtime = filemtime($cacheFile);
+            
+            if ($cacheMtime >= $templateMtime) {
+                return file_get_contents($cacheFile);
+            }
+        }
+        
+        $compiled = TemplateDirectives::compile($content);
+        file_put_contents($cacheFile, $compiled);
+        
+        return $compiled;
     }
 
     protected function hasDirectives(string $content): bool

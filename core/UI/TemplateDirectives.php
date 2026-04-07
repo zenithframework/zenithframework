@@ -167,14 +167,17 @@ class TemplateDirectives
 
     protected static function compileHelpers(string $content): string
     {
-        // {{ $var }} or {{ var }} -> add $ if missing
-        $content = preg_replace('/\{\{\s*\$?([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}/', '<?php echo htmlspecialchars(\$$1, ENT_QUOTES, \'UTF-8\'); ?>', $content);
+        // {{ $var }} - simple variable (no expression)
+        $content = preg_replace('/\{\{\s*\$([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}/', '<?php echo htmlspecialchars(\$$1, ENT_QUOTES, \'UTF-8\'); ?>', $content);
         
-        // {{ $var }} with expressions
-        $content = preg_replace('/\{\{\s*(\$.+?)\s*\}\}/', '<?php echo htmlspecialchars($1, ENT_QUOTES, \'UTF-8\'); ?>', $content);
+        // {{ $expr }} - expressions like {{ $a * 2 }}, {{ $a + $b }}, {{ func() }}
+        $content = preg_replace('/\{\{\s*(\$.+?)\}\}/', '<?php echo htmlspecialchars($1, ENT_QUOTES, \'UTF-8\'); ?>', $content);
         
-        // {!! $var !!} or {!! var !!}
-        $content = preg_replace('/\{\!\!\s*\$?([a-zA-Z_][a-zA-Z0-9_]*)\s*\!\!\}/', '<?php echo \$$1; ?>', $content);
+        // {!! $var !!} - raw output simple variable
+        $content = preg_replace('/\{\!\!\s*\$([a-zA-Z_][a-zA-Z0-9_]*)\s*\!\!\}/', '<?php echo \$$1; ?>', $content);
+        
+        // {!! $expr !!} - raw output expressions
+        $content = preg_replace('/\{\!\!\s*(\$.+?)\!\!\}/', '<?php echo $1; ?>', $content);
         
         return $content;
     }

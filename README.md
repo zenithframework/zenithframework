@@ -1,9 +1,48 @@
-# Zen Framework
+# Zen Framework v2.0
 
-A clean, modern, backend-first PHP framework with built-in dynamic UI system and strict routing architecture.
+A clean, modern, backend-first PHP framework with built-in dynamic UI system, strict routing architecture, and enterprise-grade performance and security.
 
 ## Features
 
+### Template Engine
+- **Layout Inheritance** - `@extends`, `@section`, `@yield`
+- **Directives** - `@if`, `@else`, `@foreach`, `@for`, `@while`
+- **Components** - `<zen:Button>`, `<zen:Card>` with slots
+- **Template Caching** - Compiled templates cached in production
+
+### Performance
+- **Multi-Level Cache** - Memory → APCu → Redis
+- **Advanced Rate Limiting** - TokenBucket, LeakyBucket, SlidingWindow
+- **Server Support** - Swoole, Workerman, RoadRunner adapters
+- **Connection Pooling** - Pre-connected database sockets
+
+### Real-time
+- **WebSocket** - Full-duplex communication with rooms
+- **SSE** - Server-Sent Events support
+- **Connection Pooling** - Manage multiple connections
+
+### Clustering
+- **Load Balancer** - Round-robin, least connections, weighted, IP hash
+- **Health Checker** - Node monitoring
+- **Failover** - Automatic failover
+- **Service Discovery** - Dynamic registration
+
+### Security (Enterprise-Grade)
+- **WAF** - Rule-based web application firewall
+- **DDoS Protection** - Traffic analysis, JS challenge, CAPTCHA
+- **IP Blocking** - Auto-ban, CIDR, geo-blocking, ASN filtering
+- **Rate Limiting** - Per-user, per-IP, quota management
+- **CSRF Protection** - Token-based form protection
+- **Encryption** - AES-256-GCM, HMAC support
+- **Two-Factor Auth** - TOTP (Google Authenticator)
+
+### Resilience
+- **Circuit Breaker** - Failure isolation
+- **Retry Policy** - Exponential backoff
+- **Timeout Handler** - Request timeouts
+- **Bulkhead** - Resource isolation
+
+### Core Framework
 - **Clean & Minimal** - No architectural confusion, zero garbage code
 - **Backend-First** - API-first design with JSON responses
 - **Strict Routing** - Separate route files for Web, API, Auth, and AI
@@ -14,7 +53,9 @@ A clean, modern, backend-first PHP framework with built-in dynamic UI system and
 - **Validation** - 28+ built-in validation rules
 - **Cache System** - File and Array drivers
 - **AI Integration** - OpenAI, Anthropic, and Ollama support
-- **CLI Tools** - 30+ commands for scaffolding
+
+### CLI Tools
+- **40+ Commands** - make, remove, rename, migrate, seed, serve, test, lint
 
 ## Requirements
 
@@ -25,7 +66,7 @@ A clean, modern, backend-first PHP framework with built-in dynamic UI system and
 
 ```bash
 # Create new project
-composer create-project zen/framework my-project
+composer create-project zanith/framework my-project
 cd my-project
 
 # Run migrations
@@ -126,10 +167,10 @@ AI_API_KEY=your-api-key
 
 ## Documentation
 
-- [ GUIDE.md](./GUIDE.md) - Full tutorial
-- [ COMPARE.md](./COMPARE.md) - Comparison with Laravel
-- [ SKILLS.md](./SKILLS.md) - CLI and API reference
-- [ AGENTS.md](./AGENTS.md) - AI agent instructions
+- [GUIDE.md](./GUIDE.md) - Full tutorial
+- [COMPARE.md](./COMPARE.md) - Comparison with other frameworks
+- [SKILLS.md](./SKILLS.md) - CLI and API reference
+- [AGENTS.md](./AGENTS.md) - AI agent instructions
 
 ## License
 

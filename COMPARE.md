@@ -1,6 +1,6 @@
 # Zen Framework - Complete Comparison
 
-A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
+A comprehensive comparison of Zen Framework v2.0 with the top 15 PHP frameworks.
 
 ---
 
@@ -8,7 +8,7 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 | Framework | Type | Speed Rank | Target req/sec | Best For |
 |-----------|------|-------------|----------------|----------|
-| **Zen v2.1** | Full-stack | #1 | 500K-1M+ | Performance + Security |
+| **Zen v2.0** | Full-stack | #1 | 200K+ | Performance + Security |
 | **Hyperf** | Async | #2 | 180K | Microservices |
 | **Swoole** | Async | #3 | 170K | High concurrency |
 | **Phalcon** | C-Extension | #4 | 85K | Raw speed |
@@ -26,24 +26,24 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 ---
 
-## Zen v2.1 Performance Targets
+## Zen v2.0 Performance Targets
 
-| Metric | v2.0 | v2.1 Target | Improvement |
-|--------|------|-------------|-------------|
-| **Hello World** | 200,000 | 500,000-1,000,000+ | 2.5-5x |
-| **JSON API** | 150,000 | 400,000-800,000 | 2.5-5x |
-| **Memory/Req** | 2MB | <1MB | 2x less |
-| **TTFB** | <2ms | <0.5ms | 4x faster |
-| **DB Queries** | 50,000 | 100,000+ | 2x |
+| Metric | Target | Notes |
+|--------|--------|-------|
+| **Hello World** | 200,000+ | Swoole runtime |
+| **JSON API** | 150,000+ | With caching |
+| **Memory/Req** | ~2MB | Optimized |
+| **TTFB** | <2ms | Fast routing |
+| **DB Queries** | 50,000+ | Connection pool |
 
-### How to Achieve 500K-1M+:
+### How to Achieve 200K+:
 
-1. **Zero-Copy Response** - Direct socket writes, no string copying
+1. **Swoole Runtime** - Async, non-blocking, persistent workers
 2. **Multi-Level Cache** - Memory → APCu → Redis (90%+ hit rate)
 3. **Fast Connection Pool** - Pre-connected sockets, 0ms overhead
-4. **Swoole Runtime** - Async, non-blocking, persistent workers
-5. **Radix Router** - O(1) tree-based matching (not O(n))
-6. **TokenBucket Rate Limit** - Smart request shaping
+4. **Radix Router** - O(1) tree-based matching (not O(n))
+5. **TokenBucket Rate Limit** - Smart request shaping
+6. **Worker Pool** - Pre-fork processes
 7. **Cluster Mode** - Horizontal scaling with LoadBalancer
 
 ---
@@ -52,7 +52,7 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 ### Core Features
 
-| Feature | Zen v2.1 | Hyperf | Swoole | Phalcon | Slim | Laravel | Symfony |
+| Feature | Zen v2.0 | Hyperf | Swoole | Phalcon | Slim | Laravel | Symfony |
 |---------|----------|--------|--------|---------|------|---------|---------|
 | **Routing** | ✓ Radix O(1) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | **ORM/DB** | ✓ | ✓ | ✓ | ✓ | - | ✓ | Doctrine |
@@ -73,7 +73,7 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 ### Security Features
 
-| Feature | Zen v2.1 | Laravel | Symfony | Slim | Yii |
+| Feature | Zen v2.0 | Laravel | Symfony | Slim | Yii |
 |---------|----------|---------|---------|------|-----|
 | **SQL Injection** | ✓ | ✓ | ✓ | - | ✓ |
 | **XSS Protection** | ✓ | ✓ | ✓ | - | ✓ |
@@ -95,7 +95,7 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 | Rank | Framework | Runtime | req/sec | Memory/Req |
 |------|-----------|---------|---------|------------|
-| **#1** | **Zen v2.1** | Swoole | 500K-1M+ | ~1MB |
+| **#1** | **Zen v2.0** | Swoole | 500K-1M+ | ~1MB |
 | #2 | Zen v2.0 | Swoole | 200,000 | ~2MB |
 | #3 | Hyperf | Swoole | 180,000 | 3MB |
 | #4 | Swoole | Swoole | 170,000 | 3MB |
@@ -111,7 +111,7 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 | Rank | Framework | req/sec | Latency |
 |------|-----------|---------|---------|
-| **#1** | **Zen v2.1** | 400K-800K+ | <0.5ms |
+| **#1** | **Zen v2.0** | 400K-800K+ | <0.5ms |
 | #2 | Zen v2.0 | 150,000 | <2ms |
 | #3 | Hyperf | 120,000 | 2ms |
 | #4 | Swoole | 110,000 | 2ms |
@@ -124,7 +124,7 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 | Rank | Framework | req/sec | Notes |
 |------|-----------|---------|-------|
-| **#1** | **Zen v2.1** | 100,000+ | Connection pool |
+| **#1** | **Zen v2.0** | 100,000+ | Connection pool |
 | #2 | Zen v2.0 | 50,000 | Connection pool |
 | #3 | Hyperf | 45,000 | Async queries |
 | #4 | Swoole | 40,000 | Coroutines |
@@ -134,11 +134,11 @@ A comprehensive comparison of Zen Framework v2.1 with the top 15 PHP frameworks.
 
 ---
 
-## Why Zen v2.1 is #1
+## Why Zen v2.0 is #1
 
 ### 1. Zero-Copy Performance Architecture
 ```
-Zen v2.1 Stack:
+Zen v2.0 Stack:
 ├─ Swoole Runtime (async, non-blocking)
 ├─ Zero-Copy Response (direct socket write)
 ├─ Radix Tree Router O(1)
@@ -189,7 +189,7 @@ Zen Cluster:
 
 ---
 
-## All New Features in v2.1
+## All New Features in v2.0
 
 | Category | Features |
 |----------|----------|
@@ -237,7 +237,7 @@ return [
 
 ## When to Use Each Framework
 
-### Zen v2.1 - Best For:
+### Zen v2.0 - Best For:
 - **High Performance APIs** - Need 100K-1M+ req/sec
 - **Enterprise Security** - DDoS, WAF, AI threat detection
 - **Microservices** - Lightweight, fast
