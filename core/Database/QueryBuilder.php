@@ -36,7 +36,7 @@ class QueryBuilder
         }
 
         $driver = 'sqlite';
-        $databasePath = dirname(__DIR__, 2) . '/database/database.sqlite';
+        $databasePath = dirname(__DIR__, 4) . '/database/database.sqlite';
 
         $config = config('database');
         if ($config !== null) {

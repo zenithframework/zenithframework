@@ -32,26 +32,7 @@ class ErrorHandler
             fwrite(STDERR, "File: " . $e->getFile() . " Line: " . $e->getLine() . "\n");
             fwrite(STDERR, $e->getTraceAsString() . "\n");
         } else {
-            $acceptsJson = str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json');
-
-            if ($acceptsJson) {
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => $e->getMessage(),
-                    'code' => $e->getCode(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                ], JSON_PRETTY_PRINT);
-            } else {
-                header('Content-Type: text/html');
-                echo '<!DOCTYPE html><html><head><title>Error</title>';
-                echo '<style>body{font-family:monospace;margin:40px;background:#1a1a2e;color:#eee;}pre{background:#16213e;padding:20px;border-radius:8px;overflow-x:auto;}</style>';
-                echo '</head><body>';
-                echo '<h1>' . htmlspecialchars($e->getMessage()) . '</h1>';
-                echo '<pre>' . htmlspecialchars($e->getTraceAsString()) . '</pre>';
-                echo '</body></html>';
-            }
+            echo ErrorPage::render($e);
         }
 
         exit(1);

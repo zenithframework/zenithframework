@@ -11,7 +11,7 @@ abstract class FormRequest extends Request
 {
     protected array $messages = [];
 
-    public function validate(): bool
+    public function validateRequest(): bool
     {
         $validator = Validator::make($this->all(), $this->rules(), $this->messages);
         
@@ -46,5 +46,10 @@ abstract class FormRequest extends Request
     public function errors(): array
     {
         return session()->get('_errors', []);
+    }
+
+    public function fails(): bool
+    {
+        return !$this->validateRequest();
     }
 }

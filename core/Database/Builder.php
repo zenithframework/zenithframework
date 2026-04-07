@@ -201,7 +201,7 @@ class Builder
         return $this->qb->sum($column);
     }
 
-    public function paginate(int $perPage = 15, int $page = null): Paginator
+    public function paginate(int $perPage = 15, ?int $page = null): Paginator
     {
         return $this->qb->paginate($perPage, $page);
     }

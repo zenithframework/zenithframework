@@ -4,29 +4,40 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Zen\Http\Request;
 use Zen\Http\Response;
+use Zen\Middleware\MiddlewareInterface;
 
-class Csrf
+class Csrf implements MiddlewareInterface
 {
-    public function handle(Request $request, Closure $next): Response
+    protected array $except = [];
+
+    public function handle(Request $request, callable $next): Response
     {
-        if ($request->isMethod('GET')) {
+        if ($this->isReadingRequest($request)) {
             return $next($request);
         }
 
-        $token = $request->input('_token');
-        $sessionToken = session_token();
+        if (in_array($request->method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+            $token = $request->header('X-CSRF-TOKEN') ?? $request->input('_token');
+            $sessionToken = session()->get('_token');
 
-        if ($token === null) {
-            $token = $request->header('X-CSRF-TOKEN');
-        }
-
-        if ($token === null || $token !== $sessionToken) {
-            return new Response('CSRF token mismatch', 419);
+            if (!$token || $token !== $sessionToken) {
+                return new Response(json_encode(['error' => 'CSRF token mismatch']), 419, ['Content-Type' => 'application/json']);
+            }
         }
 
         return $next($request);
+    }
+
+    protected function isReadingRequest(Request $request): bool
+    {
+        return in_array($request->method, ['GET', 'HEAD', 'OPTIONS']);
+    }
+
+    public function except(array $routes): self
+    {
+        $this->except = $routes;
+        return $this;
     }
 }

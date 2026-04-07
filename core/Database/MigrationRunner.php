@@ -13,7 +13,13 @@ class MigrationRunner
 
     public function __construct()
     {
-        $this->migrationPath = dirname(__DIR__, 2) . '/database/migrations';
+        $basePath = dirname(__DIR__, 2);
+        $this->migrationPath = $basePath . '/database/migrations';
+        
+        if (!is_dir($this->migrationPath)) {
+            $basePath2 = dirname(__DIR__);
+            $this->migrationPath = $basePath2 . '/database/migrations';
+        }
     }
 
     public function run(): void

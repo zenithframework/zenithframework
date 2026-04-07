@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zen\UI;
 
+use Zen\UI\ComponentParser;
+
 abstract class Component
 {
     protected array $props = [];
@@ -15,6 +17,17 @@ abstract class Component
     }
 
     abstract public function render(): string;
+
+    public static function make(string $attrs = '', ?string $slot = null): string
+    {
+        $props = ComponentParser::parseAttrs($attrs);
+        $slots = $slot !== null ? ComponentParser::parseSlots($slot) : ['default' => ''];
+
+        $instance = new static($props);
+        $instance->slots = $slots;
+
+        return $instance->render();
+    }
 
     public function props(array $props): static
     {
@@ -38,14 +51,14 @@ abstract class Component
         return $this;
     }
 
-    public function getSlot(string $name): string
+    public function getSlot(string $name = 'default'): string
     {
         return $this->slots[$name] ?? '';
     }
 
-    public function hasSlot(string $name): bool
+    public function hasSlot(string $name = 'default'): bool
     {
-        return isset($this->slots[$name]);
+        return isset($this->slots[$name]) && $this->slots[$name] !== '';
     }
 
     protected function e(mixed $value): string

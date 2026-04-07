@@ -50,7 +50,13 @@ use Zen\Console\Commands\ClassResolve;
 use Zen\Console\Commands\Migrate;
 use Zen\Console\Commands\DbSeed;
 use Zen\Console\Commands\CacheClear;
+use Zen\Console\Commands\OptimizeClear;
 use Zen\Console\Commands\RouteList;
+use Zen\Console\Commands\RouteCache;
+use Zen\Console\Commands\RouteTest;
+use Zen\Console\Commands\RouteFix;
+use Zen\Console\Commands\RouteConvert;
+use Zen\Console\Commands\ApiTest;
 use Zen\Console\Commands\Serve;
 use Zen\Console\Commands\Lint;
 use Zen\Console\Commands\Test;
@@ -101,7 +107,13 @@ $commands = [
     'migrate:fresh' => Migrate::class,
     'db:seed' => DbSeed::class,
     'cache:clear' => CacheClear::class,
+    'optimize:clear' => OptimizeClear::class,
     'route:list' => RouteList::class,
+    'route:cache' => RouteCache::class,
+    'route:test' => RouteTest::class,
+    'route:fix' => RouteFix::class,
+    'route:convert' => RouteConvert::class,
+    'api:test' => ApiTest::class,
     'serve' => Serve::class,
     'lint' => Lint::class,
     'test' => Test::class,
@@ -125,7 +137,8 @@ if (empty($argv)) {
         'Remove Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'remove:'), ARRAY_FILTER_USE_KEY),
         'Rename Commands' => array_filter($commands, fn($k) => str_starts_with($k, 'rename:'), ARRAY_FILTER_USE_KEY),
         'Database Commands' => ['migrate', 'migrate:rollback', 'migrate:fresh', 'db:seed'],
-        'Other Commands' => ['cache:clear', 'route:list', 'serve', 'class:resolve', 'lint', 'test'],
+        'Route Commands' => ['route:list', 'route:cache', 'route:test', 'route:fix', 'route:convert', 'api:test'],
+        'Other Commands' => ['cache:clear', 'serve', 'class:resolve', 'lint', 'test'],
     ];
     
     foreach ($categories as $category => $cmds) {

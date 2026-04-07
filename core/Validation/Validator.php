@@ -48,6 +48,19 @@ class Validator
         return $this->errors;
     }
 
+    public function validated(): array
+    {
+        $validated = [];
+        
+        foreach ($this->rules as $field => $ruleString) {
+            if (isset($this->data[$field])) {
+                $validated[$field] = $this->data[$field];
+            }
+        }
+        
+        return $validated;
+    }
+
     protected function validateField(string $field, string $rule): void
     {
         [$ruleName, $parameter] = array_pad(explode(':', $rule, 2), 2, null);

@@ -2,26 +2,23 @@
 
 declare(strict_types=1);
 
+use Zen\Database\Schema;
+
 return new class {
     public function up(): void
     {
-        $sql = "CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL UNIQUE,
-            password VARCHAR(255) NOT NULL,
-            email_verified_at DATETIME DEFAULT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        
-        $qb = new \Zen\Database\QueryBuilder();
-        $qb->raw($sql);
+        Schema::create('users', function ($table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function down(): void
     {
-        $qb = new \Zen\Database\QueryBuilder();
-        $qb->raw("DROP TABLE IF EXISTS users");
+        Schema::dropIfExists('users');
     }
 };

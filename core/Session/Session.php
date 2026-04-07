@@ -34,6 +34,12 @@ class Session
         $_SESSION[$key] = $value;
     }
 
+    public static function set(string $key, mixed $value): self
+    {
+        self::put($key, $value);
+        return new self();
+    }
+
     public static function get(string $key, mixed $default = null): mixed
     {
         self::start();

@@ -44,7 +44,10 @@ class RemoveModel extends Command
     protected function confirm(string $message): bool
     {
         echo "{$message} [y/N]: ";
-        $input = trim(fgets(STDIN));
-        return strtolower($input) === 'y';
+        $input = fgets(STDIN);
+        if ($input === false) {
+            return false;
+        }
+        return strtolower(trim($input)) === 'y';
     }
 }
