@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\Encryption;
+namespace Zenith\Security\Encryption;
 
 class Hasher
 {

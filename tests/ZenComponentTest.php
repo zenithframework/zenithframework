@@ -8,7 +8,7 @@ class ZenComponentTest extends TestCase
 {
     public function test_component_parsing(): void
     {
-        $parser = new \Zen\UI\ComponentParser();
+        $parser = new \Zenith\UI\ComponentParser();
         
         $attrs = 'variant="primary" size="lg"';
         $result = $parser::parseAttrs($attrs);
@@ -19,7 +19,7 @@ class ZenComponentTest extends TestCase
     
     public function test_component_parsing_single_quotes(): void
     {
-        $parser = new \Zen\UI\ComponentParser();
+        $parser = new \Zenith\UI\ComponentParser();
         
         $attrs = "variant='danger'";
         $result = $parser::parseAttrs($attrs);
@@ -29,7 +29,7 @@ class ZenComponentTest extends TestCase
     
     public function test_slot_parsing(): void
     {
-        $parser = new \Zen\UI\ComponentParser();
+        $parser = new \Zenith\UI\ComponentParser();
         
         $content = '<span slot="header">Title</span>Body content<span slot="footer">Footer</span>';
         $result = $parser::parseSlots($content);
@@ -41,7 +41,7 @@ class ZenComponentTest extends TestCase
     
     public function test_slot_parsing_default_only(): void
     {
-        $parser = new \Zen\UI\ComponentParser();
+        $parser = new \Zenith\UI\ComponentParser();
         
         $content = 'Just body content';
         $result = $parser::parseSlots($content);
@@ -52,7 +52,7 @@ class ZenComponentTest extends TestCase
     public function test_compile_zen_components_button(): void
     {
         $template = '<zen:button variant="primary">Click</zen:button>';
-        $compiled = \Zen\UI\TemplateDirectives::compile($template);
+        $compiled = \Zenith\UI\TemplateDirectives::compile($template);
         
         $this->assertTrue(str_contains($compiled, 'App\UI\Components\Button::make'));
     }
@@ -60,7 +60,7 @@ class ZenComponentTest extends TestCase
     public function test_compile_zen_component_self_closing(): void
     {
         $template = '<zen:counter />';
-        $compiled = \Zen\UI\TemplateDirectives::compile($template);
+        $compiled = \Zenith\UI\TemplateDirectives::compile($template);
         
         $this->assertTrue(str_contains($compiled, 'App\UI\Components\Counter::make'));
     }
@@ -68,7 +68,7 @@ class ZenComponentTest extends TestCase
     public function test_compile_layout(): void
     {
         $template = '<zen:layout.main title="Home">';
-        $compiled = \Zen\UI\TemplateDirectives::compile($template);
+        $compiled = \Zenith\UI\TemplateDirectives::compile($template);
         
         $this->assertTrue(str_contains($compiled, 'ZenTemplate::extends'));
         $this->assertTrue(str_contains($compiled, 'layouts.main'));

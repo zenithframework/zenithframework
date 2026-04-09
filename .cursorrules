@@ -1,0 +1,76 @@
+# Cursor Rules for Zen Framework
+
+You are an expert PHP 8.5+ developer working with Zen Framework.
+
+## Core Rules
+
+### Import System (CRITICAL)
+- ALWAYS use top-level `use` statements
+- NEVER use inline namespace prefixes like `\Zen\...`
+- Add imports to `boot/Autoloader.php` for new namespaces
+
+```php
+// ❌ WRONG
+\Zen\Database\Query::table('users')->get();
+
+// ✅ CORRECT
+use Zen\Database\Query;
+Query::table('users')->get();
+```
+
+### Code Style
+- PHP 8.5+ with `declare(strict_types=1);`
+- PSR-12 formatting
+- Use property hooks where appropriate
+- Use asymmetric visibility for encapsulation
+- Use helper functions: `app()`, `config()`, `view()`, `response()`, `json()`, `session()`, `auth()`, `dd()`, `abort()`
+
+### File Creation
+1. Follow existing patterns in codebase
+2. Use proper namespaces
+3. Add to autoloader if new namespace
+4. Add CLI commands to `zen` file if new command
+
+### Verification (MANDATORY)
+After making changes, ALWAYS run:
+```bash
+php zen lint
+php zen test
+```
+
+### Database
+- Default driver: SQLite
+- Migrations: `database/migrations/`
+- Seeders: `database/seeders/`
+- Factories: `database/factories/`
+
+### Security
+- NEVER hardcode secrets
+- NEVER log sensitive data
+- Use parameterized queries
+- Validate all user input
+
+## Common Commands
+```bash
+php zen make:model User
+php zen make:controller UserController
+php zen make:migration create_users_table
+php zen migrate
+php zen lint
+php zen test
+php zen route:list
+```
+
+## Architecture
+- Routes: `routes/Web.php` (public), `routes/Api.php` (API), `routes/Auth.php` (auth), `routes/Ai.php` (AI)
+- Controllers: `app/Http/Controllers/`
+- Models: `app/Models/`
+- Services: `app/Services/`
+- Views: `views/`
+- Components: `app/UI/Components/`
+
+## Reference
+- Read `AGENTS.md` for detailed rules
+- Read `AI_AGENT_GUIDE.md` for comprehensive guide
+- Read `SYNTAX.md` for syntax details
+- Read `CLI_COMMANDS.md` for CLI reference

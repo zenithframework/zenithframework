@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Storage;
+namespace Zenith\Storage;
 
 use ZipArchive;
 
@@ -111,7 +111,7 @@ class Storage
         return $this->driver->path($path);
     }
 
-    public function download(string $path, ?string $name = null): \Zen\Http\Response
+    public function download(string $path, ?string $name = null): \Zenith\Http\Response
     {
         $contents = $this->get($path);
         if ($contents === null) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Diagnostics;
+namespace Zenith\Diagnostics;
 
 use Exception;
 use Throwable;

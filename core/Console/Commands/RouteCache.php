@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 class RouteCache extends Command
 {
     public function handle(Container $container, array $arguments): void
     {
-        $router = $container->make(\Zen\Routing\Router::class);
+        $router = $container->make(\Zenith\Routing\Router::class);
         $routes = $router->getRoutes();
 
         $cacheDir = dirname(__DIR__, 3) . '/boot/cache';

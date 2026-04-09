@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Zen\UI;
+namespace Zenith\UI;
 
-use Zen\Auth\Auth;
-use Zen\UI\ZenTemplate;
-use Zen\UI\ComponentParser;
+use Zenith\Auth\Auth;
+use Zenith\UI\ZenTemplate;
+use Zenith\UI\ComponentParser;
 
 class TemplateDirectives
 {
     public static function compile(string $content): string
     {
-        $content = "<?php use Zen\\UI\\ZenTemplate; ?>\n" . $content;
+        $content = "<?php use Zenith\UI\\ZenTemplate; ?>\n" . $content;
         $content = self::compileComments($content);
         $content = self::compilePhp($content);
         $content = self::compileZenComponents($content);

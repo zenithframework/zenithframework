@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
-use Zen\Support\Str;
+use Zenith\Container;
+use Zenith\Support\Str;
 
 class RemoveLayout extends Command
 {

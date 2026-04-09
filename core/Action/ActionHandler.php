@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Action;
+namespace Zenith\Action;
 
 class ActionHandler
 {

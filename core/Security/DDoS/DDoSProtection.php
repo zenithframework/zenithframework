@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\DDoS;
+namespace Zenith\Security\DDoS;
 
 class TrafficAnalyzer
 {
@@ -233,7 +233,7 @@ class TrafficAnalyzer
 class DDoSProtection
 {
     protected TrafficAnalyzer $analyzer;
-    protected \Zen\Security\Firewall\IPBlocker $blocker;
+    protected \Zenith\Security\Firewall\IPBlocker $blocker;
     protected bool $enabled;
     protected int $challengeThreshold = 60;
     protected int $blockThreshold = 80;
@@ -241,7 +241,7 @@ class DDoSProtection
     public function __construct()
     {
         $this->analyzer = new TrafficAnalyzer();
-        $this->blocker = new \Zen\Security\Firewall\IPBlocker();
+        $this->blocker = new \Zenith\Security\Firewall\IPBlocker();
         $this->enabled = config('security.ddos_protection')['enabled'] ?? true;
     }
 

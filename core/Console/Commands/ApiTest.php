@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
-use Zen\Http\Request;
+use Zenith\Container;
+use Zenith\Http\Request;
 
 class ApiTest extends Command
 {
@@ -15,7 +15,7 @@ class ApiTest extends Command
         $method = $arguments[1] ?? 'GET';
         $data = $arguments[2] ?? null;
 
-        $router = $container->make(\Zen\Routing\Router::class);
+        $router = $container->make(\Zenith\Routing\Router::class);
         
         $body = $data ? json_decode($data, true) : [];
         

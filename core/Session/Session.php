@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Session;
+namespace Zenith\Session;
 
 class Session
 {

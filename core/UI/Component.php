@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\UI;
+namespace Zenith\UI;
 
-use Zen\UI\ComponentParser;
+use Zenith\UI\ComponentParser;
 
 abstract class Component
 {

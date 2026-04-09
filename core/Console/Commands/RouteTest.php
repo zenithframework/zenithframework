@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
-use Zen\Http\Request;
+use Zenith\Container;
+use Zenith\Http\Request;
 
 class RouteTest extends Command
 {
@@ -19,7 +19,7 @@ class RouteTest extends Command
         $uri = $arguments[0];
         $method = $arguments[1] ?? 'GET';
 
-        $router = $container->make(\Zen\Routing\Router::class);
+        $router = $container->make(\Zenith\Routing\Router::class);
         
         $request = Request::create($method, $uri);
 

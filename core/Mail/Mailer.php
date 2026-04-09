@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Mail;
+namespace Zenith\Mail;
 
 class Mail
 {
@@ -128,7 +128,7 @@ class LogDriver implements MailDriver
             substr($mail->body, 0, 100)
         );
 
-        $logger = app(\Zen\Log\Logger::class);
+        $logger = app(\Zenith\Log\Logger::class);
         $logger->info($log);
 
         return true;

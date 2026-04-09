@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Http;
+namespace Zenith\Http;
 
 class RateLimiter
 {
@@ -160,11 +160,11 @@ class FileRateDriver implements RateDriver
 
 class DatabaseRateDriver implements RateDriver
 {
-    protected \Zen\Database\QueryBuilder $db;
+    protected \Zenith\Database\QueryBuilder $db;
 
     public function __construct()
     {
-        $this->db = new \Zen\Database\QueryBuilder();
+        $this->db = new \Zenith\Database\QueryBuilder();
         $this->ensureTable();
     }
 
@@ -319,7 +319,7 @@ class RedisRateDriver implements RateDriver
 
 class ThrottleRequests
 {
-    public function handle(\Zen\Http\Request $request, \Closure $next, int $maxAttempts = 60, int $decaySeconds = 60): \Zen\Http\Response
+    public function handle(\Zenith\Http\Request $request, \Closure $next, int $maxAttempts = 60, int $decaySeconds = 60): \Zenith\Http\Response
     {
         $key = $this->resolveRequestSignature($request);
         $limiter = new RateLimiter();
@@ -340,7 +340,7 @@ class ThrottleRequests
             ->withHeader('X-RateLimit-Remaining', (string) $limiter->remaining($key, $maxAttempts));
     }
 
-    protected function resolveRequestSignature(\Zen\Http\Request $request): string
+    protected function resolveRequestSignature(\Zenith\Http\Request $request): string
     {
         $ip = $request->ip ?? 'unknown';
         return 'throttle_' . md5($ip . $request->uri);

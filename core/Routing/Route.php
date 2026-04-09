@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Routing;
+namespace Zenith\Routing;
 
 use Closure;
 

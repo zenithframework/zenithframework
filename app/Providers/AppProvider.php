@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Zen\Boot\ServiceProvider;
-use Zen\Database\QueryBuilder;
-use Zen\Session\Session;
-use Zen\Cache\Cache;
+use Zenith\Boot\ServiceProvider;
+use Zenith\Database\QueryBuilder;
+use Zenith\Session\Session;
+use Zenith\Cache\Cache;
 use App\Services\AuthService;
 
 class AppProvider extends ServiceProvider
@@ -26,5 +26,8 @@ class AppProvider extends ServiceProvider
     public function boot(): void
     {
         session()->set('csrf_token', csrf_token());
+        
+        // Register SSR/ISR services
+        SsrServiceProvider::boot();
     }
 }

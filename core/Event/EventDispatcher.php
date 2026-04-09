@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Event;
+namespace Zenith\Event;
 
-use Zen\Container;
+use Zenith\Container;
 
 class EventDispatcher
 {

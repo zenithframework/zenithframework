@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use Zen\Http\Request;
-use Zen\Validation\Validator;
+use Zenith\Http\Request;
+use Zenith\Validation\Validator;
 
 abstract class FormRequest extends Request
 {

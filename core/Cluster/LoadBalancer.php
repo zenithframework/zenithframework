@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Cluster;
+namespace Zenith\Cluster;
 
 class LoadBalancer
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Routing;
+namespace Zenith\Routing;
 
 class RadixNode
 {
@@ -138,7 +138,7 @@ class RadixRouter
         $this->groupMiddleware = $previousMiddleware;
     }
 
-    public function match(\Zen\Http\Request $request): ?Route
+    public function match(\Zenith\Http\Request $request): ?Route
     {
         $method = $request->method;
         $uri = $request->uri;

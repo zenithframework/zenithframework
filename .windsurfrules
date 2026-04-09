@@ -1,0 +1,226 @@
+# Windsurf/Codex Rules for Zen Framework
+
+You are an expert PHP 8.5+ developer working with Zen Framework v3.0.
+
+## Essential Rules
+
+### 1. Import System (MANDATORY)
+- ALWAYS use top-level `use` statements
+- NEVER use inline fully qualified namespaces (`\Zen\...`)
+- Add new namespaces to `boot/Autoloader.php`
+
+```php
+// ❌ WRONG
+$result = \Zen\Database\Model::find(1);
+
+// ✅ CORRECT
+use Zen\Database\Model;
+$result = Model::find(1);
+```
+
+### 2. Code Style Requirements
+- All PHP files MUST start with `declare(strict_types=1);`
+- PHP 8.5+ features required (property hooks, asymmetric visibility, attributes)
+- PSR-12 formatting
+- Use helper functions: `app()`, `config()`, `view()`, `response()`, `redirect()`, `json()`, `session()`, `auth()`
+
+### 3. Verification Commands (ALWAYS RUN)
+After making ANY changes:
+```bash
+php zen lint
+php zen test
+```
+
+### 4. Project Structure
+```
+zen/
+├── app/
+│   ├── Http/Controllers/
+│   ├── Http/Middleware/
+│   ├── Http/Requests/
+│   ├── Models/
+│   ├── Services/
+│   ├── Providers/
+│   └── UI/Components/
+├── boot/                  # Bootstrap files
+├── config/               # Configuration
+├── core/                 # Framework core
+├── database/migrations/
+├── database/seeders/
+├── database/factories/
+├── routes/
+│   ├── Web.php          # Public routes (/)
+│   ├── Api.php          # API routes (/api)
+│   ├── Auth.php         # Auth routes (/auth)
+│   └── Ai.php           # AI routes (/ai)
+├── views/
+└── zen                   # CLI entry point
+```
+
+### 5. Database Rules
+- Default driver: SQLite
+- ALWAYS test migrations with: `php zen migrate --rollback`
+- Use ORM methods, avoid raw SQL when possible
+- Use factories for test data generation
+
+### 6. Security Guidelines
+- NEVER hardcode secrets, API keys, or passwords
+- NEVER log sensitive information
+- Use form requests for input validation
+- Apply middleware for authentication/authorization
+- Use parameterized queries (ORM handles this)
+
+### 7. Common Workflows
+
+**Creating a new feature:**
+1. Create model: `php zen make:model User --migration`
+2. Create controller: `php zen make:controller UserController`
+3. Add routes: Edit `routes/Web.php` or `routes/Api.php`
+4. Create service: `php zen make:service UserService`
+5. Create validation: `php zen make:request StoreUser`
+6. Run: `php zen lint && php zen test`
+
+**Adding middleware:**
+1. Create: `php zen make:middleware Auth`
+2. Apply in routes or globally in `boot/Engine.php`
+
+**Creating UI:**
+1. Create component: `php zen make:component UserCard`
+2. Create page: `php zen make:page Dashboard`
+3. Create layout: `php zen make:layout admin --type=app`
+
+### 8. CLI Commands Reference
+```bash
+# Development server
+php zen serve
+php zen serve --port=8080
+
+# File generation
+php zen make:model User
+php zen make:controller UserController
+php zen make:migration create_users_table
+php zen make:seeder UserSeeder
+php zen make:factory UserFactory
+php zen make:service UserService
+php zen make:middleware Auth
+php zen make:request StoreUser
+php zen make:page Dashboard
+php zen make:component UserCard
+php zen make:layout admin --type=app
+
+# Database operations
+php zen migrate
+php zen migrate --rollback
+php zen migrate --reset
+php zen db:seed
+
+# Code quality
+php zen lint
+php zen lint --no-imports
+php zen test
+php zen route:list
+php zen route:list --json
+php zen cache:clear
+```
+
+### 9. Code Patterns
+
+**Controller Pattern:**
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Services\UserService;
+use Zen\Http\Response;
+
+class UserController
+{
+    public function __construct(
+        protected UserService $users
+    ) {}
+
+    public function index(): Response
+    {
+        $users = User::all();
+        return view('users.index', compact('users'));
+    }
+
+    public function store(Request $request): Response
+    {
+        $user = $this->users->create($request->validated());
+        return redirect()->route('users.show', ['id' => $user->id]);
+    }
+}
+```
+
+**Service Pattern:**
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use App\Models\User;
+
+class UserService
+{
+    public function create(array $data): User
+    {
+        // Business logic
+        return User::create($data);
+    }
+}
+```
+
+**Model Pattern:**
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Zen\Database\Model;
+
+class User extends Model
+{
+    protected string $table = 'users';
+    protected array $fillable = ['name', 'email'];
+    protected array $hidden = ['password'];
+    
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+}
+```
+
+### 10. Things to Avoid
+- ❌ Using inline namespace prefixes
+- ❌ Skipping verification after changes
+- ❌ Hardcoding configuration values
+- ❌ Deleting migrations without approval
+- ❌ Committing code that fails lint or tests
+- ❌ Using outdated PHP syntax
+- ❌ Ignoring existing code patterns
+
+### 11. Reference Documentation
+- `AGENTS.md` - AI agent instructions
+- `AI_AGENT_GUIDE.md` - Comprehensive AI guide
+- `SYNTAX.md` - PHP 8.5+ syntax guide (1000+ lines)
+- `CLI_COMMANDS.md` - All CLI commands
+- `README.md` - Project overview
+- `SECURITY.md` - Security guidelines
+
+### 12. Workflow Best Practices
+1. **Read First:** Always read relevant files before making changes
+2. **Pattern Match:** Follow existing code structure exactly
+3. **Small Steps:** Make incremental changes, not massive rewrites
+4. **Verify:** Run lint and tests after every change
+5. **Document:** Update documentation when adding features
+6. **Ask:** Use questions when uncertain about requirements

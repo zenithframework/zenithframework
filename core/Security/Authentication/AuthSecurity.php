@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\Authentication;
+namespace Zenith\Security\Authentication;
 
 class LoginThrottler
 {

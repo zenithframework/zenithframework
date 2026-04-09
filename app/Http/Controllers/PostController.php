@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
 use App\Models\Post;
 
 class PostController

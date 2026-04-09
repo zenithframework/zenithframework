@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Components;
 
-use Zen\UI\Component;
+use Zenith\UI\Component;
 
 class Card extends Component
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen;
+namespace Zenith;
 
 abstract class Facade
 {

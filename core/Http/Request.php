@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Http;
+namespace Zenith\Http;
 
 class Request
 {
@@ -261,7 +261,7 @@ class Request
 
     public function validate(array $rules): array
     {
-        $validator = new \Zen\Validation\Validator($this->all(), $rules);
+        $validator = new \Zenith\Validation\Validator($this->all(), $rules);
         
         if ($validator->fails()) {
             throw new \InvalidArgumentException(json_encode($validator->errors()));

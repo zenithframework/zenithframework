@@ -3,10 +3,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
-use Zen\Console\Commands\DbSeed;
+use Zenith\Container;
+use Zenith\Console\Commands\DbSeed;
 
 class Migrate extends Command
 {
@@ -21,7 +21,7 @@ class Migrate extends Command
 
         if ($reset) {
             $this->info('Resetting migrations...');
-            $runner = new \Zen\Database\MigrationRunner();
+            $runner = new \Zenith\Database\MigrationRunner();
             $runner->reset();
             $this->info('Migrations reset complete.');
             return;
@@ -29,7 +29,7 @@ class Migrate extends Command
 
         if ($rollback) {
             $this->info('Rolling back migrations...');
-            $runner = new \Zen\Database\MigrationRunner();
+            $runner = new \Zenith\Database\MigrationRunner();
             $runner->rollback();
             $this->info('Rollback complete.');
             return;
@@ -37,7 +37,7 @@ class Migrate extends Command
 
         if ($refresh) {
             $this->info('Refreshing migrations (rollback + migrate)...');
-            $runner = new \Zen\Database\MigrationRunner();
+            $runner = new \Zenith\Database\MigrationRunner();
             $runner->rollback();
             $runner->run();
             $this->info('Migrations refreshed complete.');
@@ -46,7 +46,7 @@ class Migrate extends Command
 
         if ($fresh) {
             $this->info('Dropping all tables and migrating fresh...');
-            $runner = new \Zen\Database\MigrationRunner();
+            $runner = new \Zenith\Database\MigrationRunner();
             $runner->fresh();
             $runner->run();
 
@@ -61,7 +61,7 @@ class Migrate extends Command
         }
 
         $this->info('Running migrations...');
-        $runner = new \Zen\Database\MigrationRunner();
+        $runner = new \Zenith\Database\MigrationRunner();
         $runner->run();
         $this->info('Migrations complete.');
     }

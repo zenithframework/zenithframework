@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\UI;
+namespace Zenith\UI;
 
-use Zen\UI\ZenTemplate;
+use Zenith\UI\ZenTemplate;
 
 class TemplateCompiler
 {

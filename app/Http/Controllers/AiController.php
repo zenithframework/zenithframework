@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
-use Zen\AI\AI;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
+use Zenith\AI\AI;
 
 class AiController
 {

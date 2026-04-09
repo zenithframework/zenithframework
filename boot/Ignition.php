@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Boot;
+namespace Zenith\Boot;
 
-use Zen\Container;
-use Zen\Diagnostics\ErrorHandler;
+use Zenith\Container;
+use Zenith\Diagnostics\ErrorHandler;
 
 class Ignition
 {

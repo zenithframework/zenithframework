@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Server;
+namespace Zenith\Server;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
 
 class Server
 {
@@ -90,7 +90,7 @@ class Server
         try {
             $requestObj = Request::capture();
             $app = app();
-            $router = $app->make(\Zen\Routing\Router::class);
+            $router = $app->make(\Zenith\Routing\Router::class);
             
             $route = $router->match($requestObj);
             

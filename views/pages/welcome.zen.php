@@ -8,7 +8,7 @@ $greeting = $hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Zen Framework - Welcome</title>
+    <title>Zenith Framework - Welcome</title>
     <link rel="stylesheet" href="/assets/css/app.css" />
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
@@ -40,7 +40,7 @@ $greeting = $hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good
                 <div class="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
                     <span class="text-white font-bold text-lg">Z</span>
                 </div>
-                <span class="text-xl font-semibold text-text-primary">Zen Framework</span>
+                <span class="text-xl font-semibold text-text-primary">Zenith Framework</span>
             </div>
             <button @click="toggle()" class="px-4 py-2 rounded-lg bg-zen-600 hover:bg-zen-500 text-text-secondary transition-colors">
                 <span x-text="isDark ? '☀️ Light' : '🌙 Dark'"></span>
@@ -128,7 +128,7 @@ php zen route:list</code></pre>
 
             <!-- Footer -->
             <footer class="mt-16 text-center text-text-muted text-sm">
-                <p>Zen Framework v1.0.0 | Built with PHP & Tailwind</p>
+                <p>Zenith Framework v1.0.0 | Built with PHP & Tailwind</p>
             </footer>
         </main>
     </div>

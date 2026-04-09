@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 class MakeProject extends Command
 {
@@ -330,7 +330,7 @@ require_once __DIR__ . '/../boot/Ignition.php';
 
 $container = Zen\Boot\Ignition::fire();
 
-$router = $container->make(\Zen\Routing\Router::class);
+$router = $container->make(\Zenith\Routing\Router::class);
 
 foreach (['Web', 'Api', 'Auth', 'Ai'] as $routeFile) {
     $file = __DIR__ . '/../routes/' . $routeFile . '.php';
@@ -339,7 +339,7 @@ foreach (['Web', 'Api', 'Auth', 'Ai'] as $routeFile) {
     }
 }
 
-$request = \Zen\Http\Request::capture();
+$request = \Zenith\Http\Request::capture();
 $response = $router->match($request);
 
 if ($response === null) {
@@ -366,8 +366,8 @@ define('ZEN_START', microtime(true));
 
 require_once __DIR__ . '/boot/Ignition.php';
 
-use Zen\Boot\Ignition;
-use Zen\Console\Commands;
+use Zenith\Boot\Ignition;
+use Zenith\Console\Commands;
 
 $container = Ignition::fire();
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\WAF;
+namespace Zenith\Security\WAF;
 
-use Zen\Security\Firewall\IPBlocker;
+use Zenith\Security\Firewall\IPBlocker;
 
 class WAF
 {

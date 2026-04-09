@@ -14,5 +14,5 @@
 </main>
 
 <footer>
-    <p>&copy; 2026 Zen Framework</p>
+    <p>&copy; 2026 Zenith Framework</p>
 </footer>

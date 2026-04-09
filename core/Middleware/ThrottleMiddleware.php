@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Middleware;
+namespace Zenith\Middleware;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
 use Closure;
 
 class ThrottleMiddleware implements MiddlewareInterface

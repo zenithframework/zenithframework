@@ -18,6 +18,6 @@ return [
     ],
     'from' => [
         'address' => 'noreply@localhost',
-        'name' => 'Zen Framework',
+        'name' => 'Zenith Framework',
     ],
 ];

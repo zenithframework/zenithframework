@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zen\Middleware;
+namespace Zenith\Middleware;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
-use Zen\Container;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
+use Zenith\Container;
 
 class MiddlewareStack
 {
@@ -57,8 +57,8 @@ class MiddlewareStack
             'auth' => \App\Http\Middleware\Auth::class,
             'guest' => \App\Http\Middleware\Guest::class,
             'csrf' => \App\Http\Middleware\Csrf::class,
-            'throttle' => \Zen\Middleware\ThrottleMiddleware::class,
-            'rate_limit' => \Zen\Middleware\ThrottleMiddleware::class,
+            'throttle' => \Zenith\Middleware\ThrottleMiddleware::class,
+            'rate_limit' => \Zenith\Middleware\ThrottleMiddleware::class,
         ];
 
         $class = $aliases[$middleware] ?? $middleware;

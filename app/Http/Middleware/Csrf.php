@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
-use Zen\Middleware\MiddlewareInterface;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
+use Zenith\Middleware\MiddlewareInterface;
 
 class Csrf implements MiddlewareInterface
 {

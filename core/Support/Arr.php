@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Support;
+namespace Zenith\Support;
 
 class Arr
 {

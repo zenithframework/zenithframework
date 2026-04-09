@@ -1,0 +1,35 @@
+# Aider configuration for Zen Framework
+
+# AI Assistant Settings
+architect: true
+auto-commits: true
+watch-files: true
+dry-run: false
+analytics-disable: true
+map-tokens: 1024
+cache-prompts: true
+
+# Auto-lint and test settings
+lint-command: "php zen lint"
+test-command: "php zen test"
+
+# File patterns to watch
+watch-patterns:
+  - "*.php"
+  - "routes/*.php"
+  - "app/**/*.php"
+  - "core/**/*.php"
+
+# Git settings
+git-auto-add: true
+git-auto-commit: true
+commit-message-template: "{action}: {description}"
+
+# PHP-specific settings
+php-strict-mode: true
+php-version: "8.5"
+psr-standard: "PSR-12"
+
+# Security settings
+scan-secrets: true
+block-hardcoded-secrets: true

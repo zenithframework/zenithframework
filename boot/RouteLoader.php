@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zen\Boot;
+namespace Zenith\Boot;
 
-use Zen\Container;
-use Zen\Routing\Router;
-use Zen\Routing\Route;
-use Zen\Routing\RouteGroup;
+use Zenith\Container;
+use Zenith\Routing\Router;
+use Zenith\Routing\Route;
+use Zenith\Routing\RouteGroup;
 
 class RouteLoader
 {
@@ -66,7 +66,7 @@ class RouteLoader
 
     protected function loadRouteFile(Router $router, string $file, string $prefix): void
     {
-        $router->setCurrentGroup(new \Zen\Routing\RouteGroupContext($prefix));
+        $router->setCurrentGroup(new \Zenith\Routing\RouteGroupContext($prefix));
         
         require $file;
         

@@ -1,9 +1,48 @@
 # Changelog
 
-All notable changes to Zen Framework will be documented in this file.
+All notable changes to Zenith Framework will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [3.0.0] - 2026-04-09
+
+### Enterprise Release - "Enterprise"
+
+#### Added
+- **Version Command**: `php zen -v`, `php zen --version`, `php zen version`
+- **Version Tracking**: `Zen\Version` class with version, codename, and release date
+- **PHP 8.5 Support**: Updated requirement to PHP 8.5+
+- **Enhanced Extensions**: OpenSSL and cURL extensions now required
+- **Environment Template**: `.env.example` with all configuration options
+- **Comprehensive .gitignore**: Enterprise-grade ignore patterns
+- **Public Assets**: `public/robots.txt`, `public/assets/js/`, `public/assets/images/`
+- **Composer Scripts**: `lint`, `test`, `serve` scripts for common tasks
+- **Directory Cleanup**: Removed orphaned directories (`app/Routes`, `app/UI/Layouts`, `views/components`)
+- **Storage Organization**: Consolidated to `storage/framework/{cache,sessions,views}` structure
+- **.gitkeep Files**: Added to required empty directories
+
+#### Fixed
+- **CRITICAL**: Fixed HTTP scheme detection bug in `Request::root()` (incorrect ternary precedence)
+- **Low**: Removed duplicate `redirect()` function in helpers.php
+- **Type Safety**: Fixed nullable type hint in `Model::getOriginal(?string $key)`
+- **Code Quality**: Improved type declarations across codebase
+
+#### Changed
+- **Framework Version**: Bumped from 2.1.0 to 3.0.0 (Enterprise Edition)
+- **PHP Requirement**: 8.4+ → 8.5+
+- **Structure**: Clean, enterprise-grade directory organization
+- **Documentation**: Updated all .md files with current information
+
+#### Security
+- Fixed HTTP scheme detection vulnerability that could incorrectly report HTTPS status
+- Enhanced .gitignore to protect sensitive files and credentials
+
+#### Developer Experience
+- Added `php zen -v` command for quick version checks
+- Added comprehensive `.env.example` template
+- Cleaner project structure with no orphaned directories
+- Better organization of storage and cache directories
 
 ## [2.1.0] - 2026-04-07
 
@@ -270,11 +309,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Upgrade Notes
 
-### v1.0.0
+### v3.0.0 (Enterprise)
+- Requires PHP 8.5+ (upgraded from 8.4+)
+- New version command: `php zen -v`
+- Enhanced .gitignore for enterprise security
+- Cleaner directory structure (orphaned dirs removed)
+- All type declarations improved
+- Critical HTTP scheme bug fixed
+
+### v2.1.0
+- Requires PHP 8.4+
+- Performance and caching enhancements
+- Advanced rate limiting and security
+
+### v2.0.0
 - Requires PHP 8.4+
 - New CLI commands available
 - Strict routing now enforced (separate route files)
 - All imports must use top-level `use` statements
 
-### Future Versions
-- Stay tuned for more features and improvements!
+### v1.0.0
+- Initial stable release
+- Core framework features
+- 40+ CLI commands

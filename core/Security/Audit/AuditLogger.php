@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\Audit;
+namespace Zenith\Security\Audit;
 
 class AuditLogger
 {
@@ -252,7 +252,7 @@ class AlertManager
 
     protected function sendEmail(string $to, string $subject, string $message): void
     {
-        app(\Zen\Mail\Mailer::class)->raw($to, $subject, $message);
+        app(\Zenith\Mail\Mailer::class)->raw($to, $subject, $message);
     }
 
     protected function sendSlack(string $webhook, string $message): void

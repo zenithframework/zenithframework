@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name' => 'Zen Framework',
+    'name' => 'Zenith Framework',
     'env' => 'development',
     'debug' => true,
     'url' => 'http://localhost',

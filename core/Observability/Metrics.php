@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Observability;
+namespace Zenith\Observability;
 
 class MetricsCollector
 {

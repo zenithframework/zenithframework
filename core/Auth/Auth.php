@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Auth;
+namespace Zenith\Auth;
 
 use App\Models\User;
-use Zen\Database\Model;
+use Zenith\Database\Model;
 
 class Auth
 {
@@ -35,7 +35,7 @@ class Auth
     public static function login(Model $user): void
     {
         self::$user = $user;
-        \Zen\Session\Session::put('auth_' . self::$guard, $user->id);
+        \Zenith\Session\Session::put('auth_' . self::$guard, $user->id);
     }
 
     public static function loginUsingId(int $id): bool
@@ -53,7 +53,7 @@ class Auth
     public static function logout(): void
     {
         self::$user = null;
-        \Zen\Session\Session::forget('auth_' . self::$guard);
+        \Zenith\Session\Session::forget('auth_' . self::$guard);
     }
 
     public static function attempt(array $credentials): bool
@@ -114,7 +114,7 @@ class Auth
 
     public static function loadFromSession(): void
     {
-        $id = \Zen\Session\Session::get('auth_' . self::$guard);
+        $id = \Zenith\Session\Session::get('auth_' . self::$guard);
 
         if ($id !== null) {
             self::$user = User::find((int) $id);

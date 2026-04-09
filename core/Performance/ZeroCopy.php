@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Performance;
+namespace Zenith\Performance;
 
 class ZeroCopyResponse
 {

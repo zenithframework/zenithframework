@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Zen\Container;
-use Zen\Boot\ConfigLoader;
-use Zen\Boot\Ignition;
-use Zen\Http\Request;
-use Zen\Http\Response;
-use Zen\Http\Redirect;
-use Zen\Routing\Router;
+use Zenith\Container;
+use Zenith\Boot\ConfigLoader;
+use Zenith\Boot\Ignition;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
+use Zenith\Http\Redirect;
+use Zenith\Routing\Router;
 
 if (!function_exists('app')) {
     function app(?string $abstract = null): mixed
@@ -100,7 +100,7 @@ if (!function_exists('render_zen_template')) {
                 $compiled = file_get_contents($cacheFile);
             } else {
                 // Use full template compilation
-                $compiled = \Zen\UI\TemplateDirectives::compile($content);
+                $compiled = \Zenith\UI\TemplateDirectives::compile($content);
                 
                 // Cache the compiled template in production
                 if ($env === 'production') {
@@ -134,7 +134,7 @@ if (!function_exists('render_zen_template')) {
     {
         // Get layout content
         $layoutContent = file_get_contents($layoutFile);
-        $layoutCompiled = \Zen\UI\TemplateDirectives::compile($layoutContent);
+        $layoutCompiled = \Zenith\UI\TemplateDirectives::compile($layoutContent);
         
         // Get template content and extract sections
         $templateContent = file_get_contents($templateFile);
@@ -147,7 +147,7 @@ if (!function_exists('render_zen_template')) {
             $sectionName = $section[1];
             $sectionValue = trim($section[2]);
             // Compile the value (it might contain {{ }} or other directives)
-            $sectionValue = \Zen\UI\TemplateDirectives::compile($sectionValue);
+            $sectionValue = \Zenith\UI\TemplateDirectives::compile($sectionValue);
             $sectionData[$sectionName] = $sectionValue;
         }
         
@@ -157,7 +157,7 @@ if (!function_exists('render_zen_template')) {
             $sectionName = $section[1];
             $sectionContent = trim($section[2]);
             // Compile the section content
-            $sectionContent = \Zen\UI\TemplateDirectives::compile($sectionContent);
+            $sectionContent = \Zenith\UI\TemplateDirectives::compile($sectionContent);
             $sectionData[$sectionName] = $sectionContent;
         }
         
@@ -318,7 +318,7 @@ if (!function_exists('dd')) {
 if (!function_exists('session')) {
     function session(?string $key = null, mixed $default = null): mixed
     {
-        $session = new \Zen\Session\Session();
+        $session = new \Zenith\Session\Session();
         
         if ($key === null) {
             return $session;
@@ -329,8 +329,8 @@ if (!function_exists('session')) {
 }
 
 if (!function_exists('auth')) {
-    function auth(?string $guard = null): \Zen\Auth\Auth
+    function auth(?string $guard = null): \Zenith\Auth\Auth
     {
-        return new \Zen\Auth\Auth();
+        return new \Zenith\Auth\Auth();
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Resilience;
+namespace Zenith\Resilience;
 
 class CircuitBreaker
 {

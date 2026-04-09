@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\Firewall;
+namespace Zenith\Security\Firewall;
 
-use Zen\Database\QueryBuilder;
+use Zenith\Database\QueryBuilder;
 
 class IPBlocker
 {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\User;
-use Zen\Auth\Auth;
-use Zen\Validation\Validator;
+use Zenith\Auth\Auth;
+use Zenith\Validation\Validator;
 
 class AuthService
 {

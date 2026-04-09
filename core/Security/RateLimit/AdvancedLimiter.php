@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\RateLimit;
+namespace Zenith\Security\RateLimit;
 
 class TokenBucket
 {

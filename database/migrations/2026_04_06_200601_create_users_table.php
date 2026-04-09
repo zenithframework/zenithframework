@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zen\Database\Schema;
+use Zenith\Database\Schema;
 
 return new class {
     public function up(): void

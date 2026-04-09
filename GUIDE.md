@@ -1,6 +1,8 @@
-# Zen Framework Guide
+# Zenith Framework Guide
 
-A comprehensive guide to building applications with Zen Framework.
+A comprehensive guide to building applications with Zenith Framework v3.0 Enterprise.
+
+**Requirements:** PHP 8.5+, PDO, OpenSSL, cURL, MBString extensions
 
 ## Table of Contents
 
@@ -94,7 +96,7 @@ zen/
 Create `.env` file:
 
 ```env
-APP_NAME=Zen Framework
+APP_NAME=Zenith Framework
 APP_ENV=development
 APP_DEBUG=true
 APP_URL=http://localhost
@@ -401,7 +403,7 @@ php zen make:component Input
 
 ## Template Engine
 
-Zen Framework includes a powerful template engine with `.zen.php` files. It supports layouts, components, and all modern templating features.
+Zenith Framework includes a powerful template engine with `.zen.php` files. It supports layouts, components, and all modern templating features.
 
 ### Template Files
 
@@ -885,6 +887,7 @@ server {
 
 ## Next Steps
 
-- Read [COMPARE.md](./COMPARE.md) for framework comparison
-- Check [SKILLS.md](./SKILLS.md) for CLI reference
+- Read [SYNTAX.md](./SYNTAX.md) for complete syntax reference
+- Check [CLI_COMMANDS.md](./CLI_COMMANDS.md) for 118 CLI commands reference
 - See [AGENTS.md](./AGENTS.md) for AI agent instructions
+- Visit [zenithframework.com](https://zenithframework.com) for official documentation

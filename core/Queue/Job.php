@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Queue;
+namespace Zenith\Queue;
 
-use Zen\Database\QueryBuilder;
+use Zenith\Database\QueryBuilder;
 
 abstract class Job
 {
@@ -34,7 +34,7 @@ abstract class Job
         $job->payload = $data;
         
         if (class_exists('Zen\Queue\QueueManager')) {
-            app(\Zen\Queue\QueueManager::class)->push(static::class, $data);
+            app(\Zenith\Queue\QueueManager::class)->push(static::class, $data);
         }
     }
 

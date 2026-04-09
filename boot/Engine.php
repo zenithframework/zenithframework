@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zen\Boot;
+namespace Zenith\Boot;
 
-use Zen\Container;
-use Zen\Http\Request;
-use Zen\Http\Response;
-use Zen\Routing\Router;
+use Zenith\Container;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
+use Zenith\Routing\Router;
 
 class Engine
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Http;
+namespace Zenith\Http;
 
-use Zen\Database\Model;
+use Zenith\Database\Model;
 
 class Resource
 {

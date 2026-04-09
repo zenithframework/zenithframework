@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Database;
+namespace Zenith\Database;
 
 use PDO;
 

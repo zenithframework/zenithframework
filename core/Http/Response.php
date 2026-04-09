@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Http;
+namespace Zenith\Http;
 
 class Response
 {
@@ -100,7 +100,7 @@ class Response
 
     public function toRoute(string $name, array $params = [], int $status = 302): static
     {
-        $url = app(\Zen\Routing\Router::class)->url($name, $params);
+        $url = app(\Zenith\Routing\Router::class)->url($name, $params);
         return $this->redirect($url, $status);
     }
 

@@ -1,27 +1,66 @@
 {
-    "name": "zanith/framework",
+    "name": "zenith/framework",
     "description": "A clean, modern, backend-first PHP framework with built-in dynamic UI",
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "ext-pdo": "*",
         "ext-json": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-curl": "*"
     },
     "autoload": {
         "psr-4": {
-            "Zen\\": "core/",
-            "Zen\\Boot\\": "boot/",
-            "App\\": "app/"
+            "Zenith\\": "core/",
+            "Zenith\\Boot\\": "boot/",
+            "Zenith\\Database\\": "core/Database/",
+            "Zenith\\Cache\\": "core/Cache/",
+            "Zenith\\Validation\\": "core/Validation/",
+            "Zenith\\UI\\": "core/UI/",
+            "Zenith\\Session\\": "core/Session/",
+            "Zenith\\AI\\": "core/AI/",
+            "Zenith\\Action\\": "core/Action/",
+            "Zenith\\Log\\": "core/Log/",
+            "Zenith\\Auth\\": "core/Auth/",
+            "Zenith\\Event\\": "core/Event/",
+            "Zenith\\Queue\\": "core/Queue/",
+            "Zenith\\Mail\\": "core/Mail/",
+            "Zenith\\Storage\\": "core/Storage/",
+            "Zenith\\Http\\": "core/Http/",
+            "Zenith\\Routing\\": "core/Routing/",
+            "Zenith\\Security\\": "core/Security/",
+            "Zenith\\Security\\RateLimit\\": "core/Security/RateLimit/",
+            "Zenith\\Security\\AI\\": "core/Security/AI/",
+            "Zenith\\Resilience\\": "core/Resilience/",
+            "Zenith\\Server\\": "core/Server/",
+            "Zenith\\Performance\\": "core/Performance/",
+            "Zenith\\WebSocket\\": "core/WebSocket/",
+            "Zenith\\Observability\\": "core/Observability/",
+            "Zenith\\Cluster\\": "core/Cluster/",
+            "Zenith\\Diagnostics\\": "core/Diagnostics/",
+            "Zenith\\Console\\Commands\\": "core/Console/Commands/",
+            "App\\": "app/",
+            "Tests\\": "tests/",
+            "Database\\Seeders\\": "database/seeders/",
+            "Database\\Migrations\\": "database/migrations/"
         },
         "files": [
             "core/Support/helpers.php"
         ]
     },
-    "bin": ["zen"],
+    "bin": ["zenith"],
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.5.0"
+        }
+    },
+    "scripts": {
+        "lint": "php zenith lint",
+        "test": "php zenith test",
+        "serve": "php zenith serve"
     }
 }

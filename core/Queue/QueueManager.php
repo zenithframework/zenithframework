@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Queue;
+namespace Zenith\Queue;
 
-use Zen\Database\QueryBuilder;
+use Zenith\Database\QueryBuilder;
 
 interface QueueDriver
 {

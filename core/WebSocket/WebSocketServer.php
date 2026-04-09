@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\WebSocket;
+namespace Zenith\WebSocket;
 
 class WebSocketServer
 {

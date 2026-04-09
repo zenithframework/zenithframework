@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Security\AI;
+namespace Zenith\Security\AI;
 
 class ThreatDetector
 {

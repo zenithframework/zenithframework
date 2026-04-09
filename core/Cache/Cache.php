@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Cache;
+namespace Zenith\Cache;
 
 class Cache
 {
