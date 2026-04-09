@@ -1,0 +1,64 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+define('ZEN_START', microtime(true));
+define('PROJECT_ROOT', __DIR__);
+
+require_once __DIR__ . '/boot/Ignition.php';
+
+use Zenith\Boot\Ignition;
+use Zenith\Console\Commands;
+
+$container = Ignition::fire();
+
+$commands = [
+    'make:page' => Commands\MakePage::class,
+    'make:component' => Commands\MakeComponent::class,
+    'make:middleware' => Commands\MakeMiddleware::class,
+    'make:controller' => Commands\MakeController::class,
+    'make:model' => Commands\MakeModel::class,
+    'make:service' => Commands\MakeService::class,
+    'make:migration' => Commands\MakeMigration::class,
+    'make:provider' => Commands\MakeProvider::class,
+    'make:seeder' => Commands\MakeSeeder::class,
+    'make:factory' => Commands\MakeFactory::class,
+    'make:layout' => Commands\MakeLayout::class,
+    'make:request' => Commands\MakeRequest::class,
+    'make:job' => Commands\MakeJob::class,
+    'migrate' => Commands\Migrate::class,
+    'migrate:rollback' => Commands\Migrate::class,
+    'migrate:fresh' => Commands\Migrate::class,
+    'migrate:refresh' => Commands\Migrate::class,
+    'migrate:reset' => Commands\Migrate::class,
+    'db:seed' => Commands\DbSeed::class,
+    'cache:clear' => Commands\CacheClear::class,
+    'serve' => Commands\Serve::class,
+    'lint' => Commands\Lint::class,
+    'test' => Commands\Test::class,
+];
+
+if (PHP_SAPI !== 'cli') {
+    exit(1);
+}
+
+array_shift($argv);
+
+if (empty($argv)) {
+    echo "Zen Framework CLI\n";
+    echo "Usage: php zen <command> [arguments]\n";
+    exit(0);
+}
+
+$command = $argv[0];
+$args = array_slice($argv, 1);
+
+if (!isset($commands[$command])) {
+    echo "Command '{$command}' not found.\n";
+    exit(1);
+}
+
+$class = $commands[$command];
+$cmd = new $class();
+$cmd->handle($container, $args);

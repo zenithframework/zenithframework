@@ -27,7 +27,7 @@ class MakeNotificationCommand extends Command
         $content = "<?php\n\n";
         $content .= "declare(strict_types=1);\n\n";
         $content .= "namespace App\\Notifications;\n\n";
-        $content .= "use Zenith\\Notifications\\Notification;\n\n";
+        $content .= "use ZenithFramework\\Notifications\\Notification;\n\n";
         $content .= "class {$name} extends Notification\n";
         $content .= "{\n";
         $content .= "    public function via(object \$notifiable): array\n";

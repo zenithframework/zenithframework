@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zenith;
+namespace ZenithFramework;
 
 class Version
 {
