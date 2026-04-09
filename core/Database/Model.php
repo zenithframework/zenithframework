@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zen\Database;
+namespace Zenith\Database;
 
-use Zen\Database\Builder;
-use Zen\Database\QueryBuilder;
-use Zen\Database\Paginator;
+use Zenith\Database\Builder;
+use Zenith\Database\QueryBuilder;
+use Zenith\Database\Paginator;
 
 abstract class Model
 {

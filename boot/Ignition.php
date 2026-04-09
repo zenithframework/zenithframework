@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Boot;
+namespace Zenith\Boot;
 
-use Zen\Container;
-use Zen\Diagnostics\ErrorHandler;
+use Zenith\Container;
+use Zenith\Diagnostics\ErrorHandler;
 
 class Ignition
 {
@@ -42,11 +42,43 @@ class Ignition
         $container->instance(ConfigLoader::class, $configLoader);
 
         $routeLoader = new RouteLoader();
-        $routeLoader->register();
+        $routeLoader->register($container);
         $container->instance(RouteLoader::class, $routeLoader);
 
         $container->instance(Container::class, $container);
 
+        self::loadServiceProviders($container);
+
         return $container;
+    }
+
+    protected static function loadServiceProviders(Container $container): void
+    {
+        $providers = [
+            \App\Providers\AppProvider::class,
+        ];
+
+        foreach ($providers as $provider) {
+            if (!class_exists($provider)) {
+                continue;
+            }
+
+            $instance = new $provider();
+            $instance->setContainer($container);
+            $instance->register();
+
+            $container->instance($provider, $instance);
+        }
+
+        foreach ($providers as $provider) {
+            if (!class_exists($provider)) {
+                continue;
+            }
+
+            $instance = $container->make($provider);
+            if (method_exists($instance, 'boot')) {
+                $instance->boot();
+            }
+        }
     }
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use Zen\Http\Request;
-use Zen\Validation\Validator;
+use Zenith\Http\Request;
+use Zenith\Validation\Validator;
 
 abstract class FormRequest extends Request
 {
     protected array $messages = [];
 
-    public function validate(): bool
+    public function validateRequest(): bool
     {
         $validator = Validator::make($this->all(), $this->rules(), $this->messages);
         
@@ -46,5 +46,10 @@ abstract class FormRequest extends Request
     public function errors(): array
     {
         return session()->get('_errors', []);
+    }
+
+    public function fails(): bool
+    {
+        return !$this->validateRequest();
     }
 }

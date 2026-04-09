@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\AI;
+namespace Zenith\AI;
 
 class AI
 {

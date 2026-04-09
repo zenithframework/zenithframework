@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 class MakeController extends Command
 {
@@ -37,8 +37,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
 
 class {$name}Controller
 {

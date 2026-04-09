@@ -58,6 +58,13 @@ class TestCase
         }
     }
 
+    public function assertStringContainsString(string $needle, string $haystack): void
+    {
+        if (strpos($haystack, $needle) === false) {
+            throw new \RuntimeException("Failed asserting that '{$haystack}' contains '{$needle}'");
+        }
+    }
+
     protected function setUp(): void {}
     protected function tearDown(): void {}
 

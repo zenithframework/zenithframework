@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\UI;
+namespace Zenith\UI;
 
 class Layout
 {

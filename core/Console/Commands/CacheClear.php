@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 class CacheClear extends Command
 {
@@ -32,14 +32,14 @@ class CacheClear extends Command
 
     protected function clearFileCache(): void
     {
-        $cachePath = dirname(__DIR__, 2) . '/cache';
+        $cachePath = dirname(__DIR__, 3) . '/boot/cache';
 
         if (!is_dir($cachePath)) {
             $this->warn('No cache directory found.');
             return;
         }
 
-        $files = glob($cachePath . '/*.cache');
+        $files = glob($cachePath . '/*.php');
         $count = 0;
 
         foreach ($files ?? [] as $file) {

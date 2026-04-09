@@ -2,14 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Zen\Boot;
+namespace Zenith\Boot;
+
+use Zenith\Container;
 
 class ConfigLoader
 {
     protected array $config = [];
+    protected string $cachePath;
+    protected bool $loaded = false;
+
+    public function __construct()
+    {
+        $this->cachePath = dirname(__DIR__, 2) . '/boot/cache/config.php';
+    }
 
     public function load(): void
     {
+        if ($this->loaded) {
+            return;
+        }
+
+        if (file_exists($this->cachePath)) {
+            $cached = require $this->cachePath;
+            if (is_array($cached)) {
+                $this->config = $cached;
+                $this->loaded = true;
+                return;
+            }
+        }
+
         $configDir = __DIR__ . '/../config/';
 
         if (!is_dir($configDir)) {
@@ -22,10 +44,26 @@ class ConfigLoader
             $key = pathinfo($file, PATHINFO_FILENAME);
             $this->config[$key] = require $file;
         }
+
+        $this->saveCache();
+        $this->loaded = true;
+    }
+
+    protected function saveCache(): void
+    {
+        $cacheDir = dirname($this->cachePath);
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0755, true);
+        }
+
+        $data = "<?php\n\nreturn " . var_export($this->config, true) . ";\n";
+        file_put_contents($this->cachePath, $data);
     }
 
     public function get(string $key, mixed $default = null): mixed
     {
+        $this->load();
+        
         $segments = explode('.', $key);
         $data = $this->config;
 
@@ -41,6 +79,8 @@ class ConfigLoader
 
     public function set(string $key, mixed $value): void
     {
+        $this->load();
+        
         $segments = explode('.', $key);
         $data = &$this->config;
 
@@ -53,10 +93,12 @@ class ConfigLoader
         }
 
         $data[array_shift($segments)] = $value;
+        $this->saveCache();
     }
 
     public function all(): array
     {
+        $this->load();
         return $this->config;
     }
 }

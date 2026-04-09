@@ -1,15 +1,17 @@
-# Zen Framework - AI Agent Instructions
+# Zenith Framework - AI Agent Instructions
 
-Instructions for AI agents working with Zen Framework codebase.
+Instructions for AI agents working with Zenith Framework codebase.
 
 ## Project Overview
 
-**Zen Framework** is a clean, modern, backend-first PHP framework with:
-- PHP 8.4+ requirement
+**Zenith Framework** is a clean, modern, backend-first PHP framework with:
+- PHP 8.5+ requirement
 - Strict routing architecture (separate files for Web, Api, Auth, Ai)
 - Built-in UI system (Components, Pages, Layouts)
 - ORM system with QueryBuilder
-- CLI tools with 40+ commands
+- CLI tools with 118+ commands
+- Enterprise-grade security and performance
+- **Official Website:** [zenithframework.com](https://zenithframework.com)
 
 ## Directory Structure
 
@@ -163,9 +165,11 @@ Create in `views/`:
 
 ## Code Style
 
-- PHP 8.4 strict typing
+- PHP 8.5 strict typing
 - PSR-12 inspired formatting
 - Use `declare(strict_types=1);` in all files
+- Use property hooks where appropriate
+- Use asymmetric visibility for encapsulation
 - Use helper functions: `app()`, `config()`, `view()`, `response()`, `redirect()`, `json()`, `session()`, `auth()`, `dd()`, `abort()`
 
 ## Key Files Reference
@@ -209,7 +213,7 @@ php zen route:list --json
 
 Configuration in `.env`:
 ```
-APP_NAME=Zen Framework
+APP_NAME=Zenith Framework
 APP_ENV=development
 APP_DEBUG=true
 

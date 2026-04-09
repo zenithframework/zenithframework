@@ -1,10 +1,10 @@
 <?php
 
-use Zen\Routing\Router;
+declare(strict_types=1);
 
-$router = app(Router::class);
+use App\Http\Controllers\ApiController;
 
-$router->get('/api/status', fn($req) => json(['status' => 'ok', 'version' => '1.0.0']));
-$router->post('/api/data', fn($req) => json(['received' => $req->all()]));
+$router->get('/status', [ApiController::class, 'status']);
+$router->post('/data', [ApiController::class, 'dataStore']);
 
 return $router;

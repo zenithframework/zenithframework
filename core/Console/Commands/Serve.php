@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 class Serve extends Command
 {
@@ -26,7 +26,14 @@ class Serve extends Command
         $this->info("http://{$host}:{$port}");
         $this->line("Press Ctrl+C to stop the server\n");
 
-        $command = sprintf('php -S %s:%d -t %s/public', $host, $port, dirname(__DIR__, 2));
+        $publicDir = dirname(__DIR__, 3) . '/public';
+        
+        if (!is_dir($publicDir)) {
+            $this->error("Public directory not found: {$publicDir}");
+            return;
+        }
+        
+        $command = sprintf('php -S %s:%d -t %s', $host, $port, $publicDir);
         
         system($command);
     }

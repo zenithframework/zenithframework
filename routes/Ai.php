@@ -1,10 +1,10 @@
 <?php
 
-use Zen\Routing\Router;
+declare(strict_types=1);
 
-$router = app(Router::class);
+use App\Http\Controllers\AiController;
 
-$router->post('/ai/chat', fn($req) => json(['response' => 'AI response']));
-$router->post('/ai/complete', fn($req) => json(['completion' => 'AI completion']));
+$router->post('/chat', [AiController::class, 'chat']);
+$router->post('/complete', [AiController::class, 'complete']);
 
 return $router;

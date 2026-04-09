@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
-use Zen\Support\Str;
+use Zenith\Container;
+use Zenith\Support\Str;
 
 class RemoveModel extends Command
 {
@@ -44,7 +44,10 @@ class RemoveModel extends Command
     protected function confirm(string $message): bool
     {
         echo "{$message} [y/N]: ";
-        $input = trim(fgets(STDIN));
-        return strtolower($input) === 'y';
+        $input = fgets(STDIN);
+        if ($input === false) {
+            return false;
+        }
+        return strtolower(trim($input)) === 'y';
     }
 }

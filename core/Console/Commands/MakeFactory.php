@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
-use Zen\Support\Str;
+use Zenith\Container;
+use Zenith\Support\Str;
 
 class MakeFactory extends Command
 {
@@ -42,7 +42,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use Zen\Database\Factory;
+use Zenith\Database\Factory;
 
 class {$className}Factory extends Factory
 {

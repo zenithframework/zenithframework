@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Boot;
+namespace Zenith\Boot;
 
-use Zen\Container;
+use Zenith\Container;
 
 abstract class ServiceProvider
 {

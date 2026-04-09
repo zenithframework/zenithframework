@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Database;
+namespace Zenith\Database;
 
 use PDO;
 
@@ -13,7 +13,13 @@ class MigrationRunner
 
     public function __construct()
     {
-        $this->migrationPath = dirname(__DIR__, 2) . '/database/migrations';
+        $basePath = dirname(__DIR__, 2);
+        $this->migrationPath = $basePath . '/database/migrations';
+        
+        if (!is_dir($this->migrationPath)) {
+            $basePath2 = dirname(__DIR__);
+            $this->migrationPath = $basePath2 . '/database/migrations';
+        }
     }
 
     public function run(): void
@@ -156,5 +162,24 @@ class MigrationRunner
     public function setMigrationPath(string $path): void
     {
         $this->migrationPath = $path;
+    }
+
+    public function fresh(): void
+    {
+        $qb = new QueryBuilder();
+        $pdo = $qb->raw("SELECT name FROM sqlite_master WHERE type='table' AND name<>'sqlite_sequence' AND name<>'migrations'");
+
+        $tables = [];
+        while ($row = $pdo->fetch(\PDO::FETCH_ASSOC)) {
+            $tables[] = $row['name'];
+        }
+
+        foreach ($tables as $table) {
+            $qb->raw("DROP TABLE IF EXISTS {$table}");
+        }
+
+        $qb->raw("DELETE FROM {$this->tableName}");
+
+        echo "Dropped all tables.\n";
     }
 }

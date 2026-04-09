@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Http;
+namespace Zenith\Http;
 
 class Redirect
 {
