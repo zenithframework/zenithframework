@@ -1,5 +1,5 @@
 {
-    "name": "zenithframework",
+    "name": "zenith/framework",
     "description": "A clean, modern, backend-first PHP framework with built-in dynamic UI",
     "type": "project",
     "license": "MIT",
