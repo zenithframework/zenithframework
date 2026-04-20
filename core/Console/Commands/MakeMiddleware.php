@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 class MakeMiddleware extends Command
 {
@@ -38,8 +38,8 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use Closure;
-use Zen\Http\Request;
-use Zen\Http\Response;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
 
 class {$name}
 {

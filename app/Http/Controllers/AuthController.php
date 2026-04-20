@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Zen\Http\Request;
-use Zen\Http\Response;
-use Zen\Auth\Auth;
-use Zen\Validation\Validator;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
+use Zenith\Auth\Auth;
+use Zenith\Validation\Validator;
 use App\Models\User;
 
 class AuthController

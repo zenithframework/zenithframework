@@ -1,7 +1,92 @@
+# Dependencies
 vendor/
+node_modules/
+package-lock.json
+
+# IDE and Editor Files
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.classpath
+*.sublime-workspace
+*.sublime-project
+
+# Logs and Runtime
 *.log
-*.sqlite
+storage/logs/*
+!.gitkeep
+database/database.sqlite
+database/database.sqlite-journal
+
+# Environment and Secrets
 .env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.crt
+
+# OS Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Generated/Cached Files
+.kilo/
+bootstrap/cache/*
+!bootstrap/cache/.gitkeep
+storage/framework/cache/*
+!storage/framework/cache/.gitkeep
+storage/framework/sessions/*
+!storage/framework/sessions/.gitkeep
+storage/framework/views/*
+!storage/framework/views/.gitkeep
+core/bootstrap/cache/*
+
+# Build and Distribution
+build/
+dist/
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# Database
+*.sqlite
+*.sqlite-journal
+*.sql.gz
+database/backups/
+
+# Test Coverage
+coverage/
+.phpunit.result.cache
+.php-cov
+
+# Composer
+composer.lock
+
+# Performance Optimizations
+*.opcache
+
+# AI and LLM Tools
+.cursor/
+.claude/
+.qwen/
+
+# Docker
+docker-compose.override.yml
+
+# Public Uploads (keep directory but not files)
+public/uploads/*
+!public/uploads/.gitkeep
+public/storage

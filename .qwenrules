@@ -1,0 +1,168 @@
+# Qwen Code Rules for Zen Framework
+
+You are an expert PHP 8.5+ developer working with Zen Framework v3.0.
+
+## Core Directives
+
+### Import System (STRICT ENFORCEMENT)
+- ALWAYS use top-level `use` statements
+- NEVER use inline fully qualified namespace prefixes (`\Zen\...`)
+- Add new namespaces to `boot/Autoloader.php`
+
+```php
+// ❌ INCORRECT
+$user = \Zen\Database\Model::find(1);
+
+// ✅ CORRECT
+use Zen\Database\Model;
+$user = Model::find(1);
+```
+
+### Code Standards
+- `declare(strict_types=1);` at top of every PHP file
+- PHP 8.5+ features required: property hooks, asymmetric visibility, attributes
+- PSR-12 formatting
+- Use helper functions: `app()`, `config()`, `view()`, `response()`, `redirect()`, `json()`, `session()`, `auth()`, `dd()`, `abort()`
+
+### Mandatory Verification
+After EVERY change:
+```bash
+php zen lint
+php zen test
+```
+
+Do NOT mark tasks complete without running these commands successfully.
+
+### Architecture
+```
+zen/
+├── app/
+│   ├── Http/Controllers/     # Request handlers
+│   ├── Http/Middleware/      # Request filtering
+│   ├── Http/Requests/        # Form validation
+│   ├── Models/               # Database models
+│   ├── Services/             # Business logic
+│   ├── Providers/            # Service providers
+│   └── UI/Components/        # Reusable UI
+├── boot/                     # Bootstrap files
+├── config/                   # Configuration
+├── core/                     # Framework core
+├── database/migrations/      # Database migrations
+├── database/seeders/         # Database seeders
+├── database/factories/       # Model factories
+├── routes/                   # Route definitions
+│   ├── Web.php              # Public routes (/)
+│   ├── Api.php              # API routes (/api)
+│   ├── Auth.php             # Auth routes (/auth)
+│   └── Ai.php               # AI routes (/ai)
+├── views/                    # View templates
+└── zen                       # CLI entry point
+```
+
+### Database Rules
+- Default driver: SQLite
+- ALWAYS test migrations with rollback
+- Use QueryBuilder or Model methods
+- NEVER write raw SQL without parameterization
+
+### Security Rules
+- NEVER hardcode secrets or API keys
+- NEVER log sensitive information
+- Use form requests for validation
+- Apply middleware for auth
+- Use parameterized queries
+
+### Common Workflows
+
+**Create Model:**
+```bash
+php zen make:model User --migration
+php zen make:factory UserFactory
+php zen make:seeder UserSeeder
+php zen migrate
+```
+
+**Create Controller:**
+```bash
+php zen make:controller UserController
+# Add routes to routes/Web.php or routes/Api.php
+```
+
+**Create Service:**
+```bash
+php zen make:service UserService
+# Inject into controller via constructor
+```
+
+**Create UI Component:**
+```bash
+php zen make:component UserCard
+# Use in views: <zen:UserCard :user="$user" />
+```
+
+### CLI Reference
+```bash
+# Development
+php zen serve                    # Start dev server
+php zen serve --port=8080        # Custom port
+
+# Make commands
+php zen make:model User
+php zen make:controller UserController
+php zen make:migration create_users_table
+php zen make:seeder UserSeeder
+php zen make:factory UserFactory
+php zen make:service UserService
+php zen make:middleware Auth
+php zen make:request StoreUser
+php zen make:page Dashboard
+php zen make:component UserCard
+php zen make:layout admin --type=app
+
+# Database
+php zen migrate                  # Run migrations
+php zen migrate --rollback       # Rollback last migration
+php zen migrate --reset          # Reset all migrations
+php zen db:seed                  # Run seeders
+
+# Code quality
+php zen lint                     # Check syntax and style
+php zen lint --no-imports        # Skip import checks
+php zen test                     # Run test suite
+php zen route:list               # List all routes
+php zen route:list --json        # JSON output
+php zen cache:clear              # Clear cache
+php zen class:resolve            # Check class resolution
+php zen class:resolve --fix      # Fix autoload issues
+```
+
+### Qwen-Specific Features
+
+Use built-in skills:
+- `/review` - Review code changes for quality and security
+- `/loop` - Set up recurring tasks (e.g., check build every 5 minutes)
+- `/qc-helper` - Get help with Qwen Code configuration
+
+### Reference Documentation
+- `AGENTS.md` - AI agent instructions
+- `AI_AGENT_GUIDE.md` - Comprehensive AI guide
+- `SYNTAX.md` - Syntax guide (1000+ lines)
+- `CLI_COMMANDS.md` - All CLI commands
+- `README.md` - Project overview
+- `SECURITY.md` - Security guidelines
+
+### Anti-Patterns (NEVER DO)
+- ❌ Using inline namespace prefixes
+- ❌ Skipping verification after changes
+- ❌ Hardcoding configuration values
+- ❌ Deleting migrations without approval
+- ❌ Committing code that fails lint or tests
+- ❌ Using outdated PHP syntax
+- ❌ Ignoring existing code patterns
+
+### When Uncertain
+1. Check `AGENTS.md` for rules
+2. Search codebase for patterns: `grep_search`, `glob`
+3. Read relevant files: `read_file`
+4. Explore codebase: use `agent` tool with Explore subagent
+5. Ask user: use `ask_user_question` tool

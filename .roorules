@@ -1,0 +1,303 @@
+# Roo Code Rules for Zen Framework
+
+You are an expert PHP 8.5+ developer working with Zen Framework v3.0 Enterprise.
+
+## Critical Rules
+
+### Import System (STRICT)
+- ALWAYS use top-level `use` statements at file beginning
+- NEVER use inline fully qualified namespace prefixes (`\Zen\...`)
+- Add new namespaces to `boot/Autoloader.php`
+
+```php
+// ❌ WRONG - Do NOT do this
+$result = \Zen\Database\Query::table('users')->get();
+
+// ✅ CORRECT - Do this instead
+use Zen\Database\Query;
+$result = Query::table('users')->get();
+```
+
+### Code Standards
+- All PHP files MUST start with `declare(strict_types=1);`
+- Use PHP 8.5+ features: property hooks, asymmetric visibility, attributes
+- Follow PSR-12 coding standards
+- Use helper functions: `app()`, `config()`, `view()`, `response()`, `redirect()`, `json()`, `session()`, `auth()`, `dd()`, `abort()`
+
+### Verification (MANDATORY)
+After EVERY code change:
+```bash
+php zen lint
+php zen test
+```
+
+Do NOT mark task complete without running these successfully.
+
+## Architecture Overview
+
+### Directory Structure
+```
+zen/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/    # Request handlers
+│   │   ├── Middleware/     # Request filtering
+│   │   └── Requests/       # Form validation
+│   ├── Models/             # Database models
+│   ├── Services/           # Business logic
+│   ├── Providers/          # Service providers
+│   └── UI/
+│       ├── Components/     # Reusable UI
+│       ├── Pages/          # Full pages
+│       └── Layouts/        # Page layouts
+├── boot/                   # Bootstrap files
+├── config/                 # Configuration
+├── core/                   # Framework core
+├── database/
+│   ├── migrations/
+│   ├── seeders/
+│   └── factories/
+├── routes/
+│   ├── Web.php            # Public routes (/)
+│   ├── Api.php            # API routes (/api)
+│   ├── Auth.php           # Auth routes (/auth)
+│   └── Ai.php             # AI routes (/ai)
+├── views/                  # View templates
+└── zen                     # CLI entry point
+```
+
+### Routing System
+- `routes/Web.php` - Public web routes (prefix: `/`)
+- `routes/Api.php` - API routes (prefix: `/api`)
+- `routes/Auth.php` - Authentication routes (prefix: `/auth`)
+- `routes/Ai.php` - AI routes (prefix: `/ai`)
+
+## Development Plans
+
+### Plan 1: Create New Feature
+```
+1. Read existing patterns (use grep_search, read_file)
+2. Create model: php zen make:model User --migration
+3. Create controller: php zen make:controller UserController
+4. Add routes: Edit routes/Web.php or routes/Api.php
+5. Create service: php zen make:service UserService
+6. Create validation: php zen make:request StoreUser
+7. Run: php zen lint && php zen test
+8. Document changes
+```
+
+### Plan 2: Fix Bug
+```
+1. Reproduce issue
+2. Identify error location (grep_search, read_file)
+3. Trace call stack
+4. Identify root cause
+5. Write failing test (if applicable)
+6. Implement fix
+7. Run: php zen lint && php zen test
+8. Verify issue resolved
+```
+
+### Plan 3: Database Migration
+```
+1. Analyze current schema
+2. Design new schema
+3. Create migration: php zen make:migration
+4. Write up/down methods
+5. Test: php zen migrate
+6. Test rollback: php zen migrate --rollback
+7. Create/update seeders
+8. Create/update factories
+```
+
+### Plan 4: Refactor Code
+```
+1. Identify refactoring target
+2. Understand current implementation
+3. Plan new structure
+4. Get approval if major changes
+5. Apply changes incrementally
+6. Run: php zen lint after each change
+7. Run: php zen test after each change
+8. Update documentation
+```
+
+## Common CLI Commands
+
+```bash
+# Development
+php zen serve                    # Start dev server
+php zen serve --port=8080        # Custom port
+
+# Make commands
+php zen make:model User
+php zen make:controller UserController
+php zen make:migration create_users_table
+php zen make:seeder UserSeeder
+php zen make:factory UserFactory
+php zen make:service UserService
+php zen make:middleware Auth
+php zen make:request StoreUser
+php zen make:page Dashboard
+php zen make:component UserCard
+php zen make:layout admin --type=app
+
+# Database
+php zen migrate                  # Run migrations
+php zen migrate --rollback       # Rollback last
+php zen migrate --reset          # Reset all
+php zen db:seed                  # Run seeders
+
+# Code quality
+php zen lint                     # Syntax check
+php zen lint --no-imports        # Skip import checks
+php zen test                     # Run tests
+php zen route:list               # List routes
+php zen route:list --json        # JSON output
+php zen cache:clear              # Clear cache
+```
+
+## Code Patterns
+
+### Controller
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Services\UserService;
+use Zen\Http\Response;
+
+class UserController
+{
+    public function __construct(
+        protected UserService $users
+    ) {}
+
+    public function index(): Response
+    {
+        $users = User::all();
+        return view('users.index', compact('users'));
+    }
+
+    public function store(Request $request): Response
+    {
+        $user = $this->users->create($request->validated());
+        return redirect()->route('users.show', ['id' => $user->id]);
+    }
+}
+```
+
+### Service
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use App\Models\User;
+
+class UserService
+{
+    public function create(array $data): User
+    {
+        // Business logic
+        return User::create($data);
+    }
+}
+```
+
+### Model
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Zen\Database\Model;
+
+class User extends Model
+{
+    protected string $table = 'users';
+    protected array $fillable = ['name', 'email'];
+    protected array $hidden = ['password'];
+    
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+}
+```
+
+## Security Rules
+
+- NEVER hardcode secrets, API keys, or passwords
+- NEVER log sensitive information
+- Use parameterized queries (ORM handles this)
+- Validate all user input with form requests
+- Apply middleware for authentication/authorization
+- Use environment variables for configuration
+
+## Anti-Patterns (NEVER DO)
+
+- ❌ Using inline namespace prefixes (`\Zen\...`)
+- ❌ Skipping verification after changes
+- ❌ Hardcoding configuration values
+- ❌ Deleting migrations without approval
+- ❌ Committing code that fails lint or tests
+- ❌ Using outdated PHP syntax
+- ❌ Ignoring existing code patterns
+- ❌ Assuming patterns without verifying
+
+## Workflow Guidelines
+
+1. **Read First:** Always read relevant files before making changes
+2. **Pattern Match:** Follow existing code structure exactly
+3. **Small Steps:** Make incremental changes, not massive rewrites
+4. **Verify:** Run lint and tests after every change
+5. **Document:** Update documentation when adding features
+6. **Ask:** Use ask_user_question when uncertain
+
+## Reference Documentation
+
+- `AGENTS.md` - AI agent instructions
+- `AI_AGENT_GUIDE.md` - Comprehensive AI guide for all IDEs
+- `SYNTAX.md` - PHP 8.5+ syntax guide (1000+ lines)
+- `CLI_COMMANDS.md` - All CLI commands reference
+- `README.md` - Project overview
+- `SECURITY.md` - Security guidelines
+- `QUICK_REFERENCE.md` - Quick reference card
+
+## Mode Usage
+
+### mode:architect
+- Use for planning and design
+- Propose architecture before implementation
+- Create detailed plans with file structure
+- Get approval before coding
+
+### mode:code
+- Use for implementation
+- Follow existing patterns strictly
+- Run verification after changes
+- Test incrementally
+
+### mode:debug
+- Use for troubleshooting
+- Trace error call stacks
+- Identify root causes
+- Apply targeted fixes
+- Verify fixes with tests
+
+## When Uncertain
+
+1. Check `AGENTS.md` for rules
+2. Search codebase: `grep_search`, `glob`
+3. Read files: `read_file`
+4. Explore codebase: use agent tool with Explore subagent
+5. Ask user: use `ask_user_question` tool

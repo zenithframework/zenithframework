@@ -2,20 +2,23 @@
 
 declare(strict_types=1);
 
-use Zen\Container;
-use Zen\Boot\ConfigLoader;
-use Zen\Http\Request;
-use Zen\Http\Response;
-use Zen\Http\Redirect;
-use Zen\Routing\Router;
+use Zenith\Container;
+use Zenith\Boot\ConfigLoader;
+use Zenith\Boot\Ignition;
+use Zenith\Http\Request;
+use Zenith\Http\Response;
+use Zenith\Http\Redirect;
+use Zenith\Routing\Router;
 
 if (!function_exists('app')) {
     function app(?string $abstract = null): mixed
     {
-        static $container;
+        static $container = null;
+        static $initialized = false;
 
-        if ($container === null) {
-            $container = new Container();
+        if ($container === null && !$initialized) {
+            $initialized = true;
+            $container = Ignition::fire();
         }
 
         if ($abstract === null) {
@@ -42,16 +45,129 @@ if (!function_exists('config')) {
 if (!function_exists('view')) {
     function view(string $template, array $data = []): string
     {
-        $viewPath = __DIR__ . '/../views/' . str_replace('.', '/', $template) . '.php';
-
-        if (!file_exists($viewPath)) {
-            throw new \RuntimeException("View [{$template}] not found.");
+        $templatePath = dirname(__DIR__, 2) . '/views';
+        $path = str_replace('.', '/', $template);
+        
+        $zenPath = $templatePath . '/' . $path . '.zen.php';
+        $phpPath = $templatePath . '/' . $path . '.php';
+        
+        if (file_exists($zenPath)) {
+            return render_zen_template($zenPath, $data);
         }
+        
+        if (file_exists($phpPath)) {
+            return render_php_template($phpPath, $data);
+        }
+        
+        throw new \RuntimeException("View [{$template}] not found.");
+    }
+}
 
+if (!function_exists('render_php_template')) {
+    function render_php_template(string $file, array $data = []): string
+    {
         extract($data);
-
         ob_start();
-        require $viewPath;
+        require $file;
+        return ob_get_clean();
+    }
+}
+
+if (!function_exists('render_zen_template')) {
+    function render_zen_template(string $file, array $data = []): string
+    {
+        // Get cache directory
+        $cacheDir = dirname(__DIR__, 2) . '/storage/framework/views';
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0755, true);
+        }
+        
+        // Generate cache filename based on template path and modification time
+        $cacheKey = md5($file . filemtime($file));
+        $cacheFile = $cacheDir . '/' . $cacheKey . '.php';
+        
+        $content = file_get_contents($file);
+        
+        // Check if file has any Zen directives that need compilation
+        $hasDirectives = preg_match('/@(if|else|foreach|for|while|extends|section|yield|include|component|csrf|method|auth|guest|php|{{|{!!)/', $content);
+        
+        if ($hasDirectives) {
+            // Check for cached compiled version (only in production)
+            $env = getenv('APP_ENV') ?: 'development';
+            $useCache = $env === 'production' && file_exists($cacheFile);
+            
+            if ($useCache) {
+                $compiled = file_get_contents($cacheFile);
+            } else {
+                // Use full template compilation
+                $compiled = \Zenith\UI\TemplateDirectives::compile($content);
+                
+                // Cache the compiled template in production
+                if ($env === 'production') {
+                    @file_put_contents($cacheFile, $compiled);
+                }
+            }
+            
+            // Check if this template extends another layout
+            if (preg_match("/@extends\s*\(['\"]([^'\"]+)['\"]\)/", $content, $matches)) {
+                $layoutPath = dirname(__DIR__, 2) . '/views/layouts/' . str_replace('.', '/', $matches[1]) . '.zen.php';
+                
+                if (file_exists($layoutPath)) {
+                    // Render layout with sections
+                    return render_zen_with_layout($file, $layoutPath, $data);
+                }
+            }
+            
+            // Simple compilation without extends
+            extract($data);
+            
+            ob_start();
+            eval('?>' . $compiled);
+            return ob_get_clean();
+        }
+        
+        // No directives - just render as PHP
+        return render_php_template($file, $data);
+    }
+    
+    function render_zen_with_layout(string $templateFile, string $layoutFile, array $data): string
+    {
+        // Get layout content
+        $layoutContent = file_get_contents($layoutFile);
+        $layoutCompiled = \Zenith\UI\TemplateDirectives::compile($layoutContent);
+        
+        // Get template content and extract sections
+        $templateContent = file_get_contents($templateFile);
+        
+        $sectionData = [];
+        
+        // Extract inline sections: @section('title', 'value')
+        preg_match_all("/@section\s*\(['\"]([^'\"]+)['\"]\s*,\s*(.+?)\)\s*/", $templateContent, $inlineSections, PREG_SET_ORDER);
+        foreach ($inlineSections as $section) {
+            $sectionName = $section[1];
+            $sectionValue = trim($section[2]);
+            // Compile the value (it might contain {{ }} or other directives)
+            $sectionValue = \Zenith\UI\TemplateDirectives::compile($sectionValue);
+            $sectionData[$sectionName] = $sectionValue;
+        }
+        
+        // Extract block sections: @section('name') ... @endsection
+        preg_match_all("/@section\s*\(['\"]([^'\"]+)['\"]\s*\)([\s\S]*?)@endsection/", $templateContent, $blockSections, PREG_SET_ORDER);
+        foreach ($blockSections as $section) {
+            $sectionName = $section[1];
+            $sectionContent = trim($section[2]);
+            // Compile the section content
+            $sectionContent = \Zenith\UI\TemplateDirectives::compile($sectionContent);
+            $sectionData[$sectionName] = $sectionContent;
+        }
+        
+        // Merge template data with section data
+        $fullData = array_merge($data, $sectionData);
+        
+        extract($fullData);
+        
+        ob_start();
+        eval('?>' . $layoutCompiled);
         return ob_get_clean();
     }
 }
@@ -148,7 +264,7 @@ if (!function_exists('env')) {
         $value = getenv($key);
 
         if ($value === false) {
-            $envFile = __DIR__ . '/../.env';
+            $envFile = dirname(__DIR__, 2) . '/.env';
 
             if (file_exists($envFile)) {
                 $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -202,7 +318,7 @@ if (!function_exists('dd')) {
 if (!function_exists('session')) {
     function session(?string $key = null, mixed $default = null): mixed
     {
-        $session = new \Zen\Session\Session();
+        $session = new \Zenith\Session\Session();
         
         if ($key === null) {
             return $session;
@@ -213,8 +329,8 @@ if (!function_exists('session')) {
 }
 
 if (!function_exists('auth')) {
-    function auth(?string $guard = null): \Zen\Auth\Auth
+    function auth(?string $guard = null): \Zenith\Auth\Auth
     {
-        return new \Zen\Auth\Auth();
+        return new \Zenith\Auth\Auth();
     }
 }

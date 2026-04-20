@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 class MakeProvider extends Command
 {
@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Zen\Boot\ServiceProvider;
+use Zenith\Boot\ServiceProvider;
 
 class {$name}Provider extends ServiceProvider
 {

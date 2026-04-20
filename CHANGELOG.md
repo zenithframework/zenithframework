@@ -1,9 +1,214 @@
 # Changelog
 
-All notable changes to Zen Framework will be documented in this file.
+All notable changes to Zenith Framework will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [3.0.0] - 2026-04-09
+
+### Enterprise Release - "Enterprise"
+
+#### Added
+- **Version Command**: `php zen -v`, `php zen --version`, `php zen version`
+- **Version Tracking**: `Zen\Version` class with version, codename, and release date
+- **PHP 8.5 Support**: Updated requirement to PHP 8.5+
+- **Enhanced Extensions**: OpenSSL and cURL extensions now required
+- **Environment Template**: `.env.example` with all configuration options
+- **Comprehensive .gitignore**: Enterprise-grade ignore patterns
+- **Public Assets**: `public/robots.txt`, `public/assets/js/`, `public/assets/images/`
+- **Composer Scripts**: `lint`, `test`, `serve` scripts for common tasks
+- **Directory Cleanup**: Removed orphaned directories (`app/Routes`, `app/UI/Layouts`, `views/components`)
+- **Storage Organization**: Consolidated to `storage/framework/{cache,sessions,views}` structure
+- **.gitkeep Files**: Added to required empty directories
+
+#### Fixed
+- **CRITICAL**: Fixed HTTP scheme detection bug in `Request::root()` (incorrect ternary precedence)
+- **Low**: Removed duplicate `redirect()` function in helpers.php
+- **Type Safety**: Fixed nullable type hint in `Model::getOriginal(?string $key)`
+- **Code Quality**: Improved type declarations across codebase
+
+#### Changed
+- **Framework Version**: Bumped from 2.1.0 to 3.0.0 (Enterprise Edition)
+- **PHP Requirement**: 8.4+ → 8.5+
+- **Structure**: Clean, enterprise-grade directory organization
+- **Documentation**: Updated all .md files with current information
+
+#### Security
+- Fixed HTTP scheme detection vulnerability that could incorrectly report HTTPS status
+- Enhanced .gitignore to protect sensitive files and credentials
+
+#### Developer Experience
+- Added `php zen -v` command for quick version checks
+- Added comprehensive `.env.example` template
+- Cleaner project structure with no orphaned directories
+- Better organization of storage and cache directories
+
+## [2.1.0] - 2026-04-07
+
+### Added
+
+#### Extreme Performance (Target: 500K-1M+ req/sec)
+- ZeroCopyResponse for direct socket writes
+- BufferManager with pre-allocated buffers
+- OutputBuffer for streaming without copying
+- SocketWriter for low-level socket access
+- StringInterner for string deduplication
+
+#### Fast Database Layer
+- FastConnectionPool with pre-connected sockets
+- ConnectionReaper for connection cleanup
+- QueryPipeline for batch queries
+- PreparedStatementCache with zero-parse caching
+- QueryOptimizer with EXPLAIN and index suggestions
+
+#### Multi-Level Cache System
+- L1: In-memory cache (arrays)
+- L2: APCu cache
+- L3: Redis cache
+- CacheWarmer for pre-building cache
+- CacheCoalescing to prevent cache stampede
+
+#### Advanced Rate Limiting
+- TokenBucket algorithm
+- LeakyBucket algorithm  
+- SlidingWindow algorithm
+- QuotaManager for API quotas
+- PriorityQueueLimiter for request prioritization
+
+#### AI-Powered Security
+- ThreatDetector with ML-based detection
+- AnomalyDetector for behavioral analysis
+- AttackPredictor to predict attacks before they happen
+
+#### WebSocket & Real-time
+- WebSocketServer with rooms and broadcasting
+- SSEHandler for Server-Sent Events
+- ConnectionManager for connection pooling
+
+#### Observability
+- MetricsCollector (Counter, Gauge, Histogram)
+- HealthChecker for health probes
+- PrometheusExporter for metrics export
+- DistributedTracing for request tracing
+
+#### Clustering & Distribution
+- LoadBalancer (round_robin, least_connections, weighted, ip_hash)
+- HealthChecker for node monitoring
+- FailoverManager for automatic failover
+- ServiceDiscovery for dynamic registration
+
+#### Configuration
+- config/performance.php - All performance tuning settings
+- config/observability.php - Monitoring configuration
+
+### Changed
+- Enhanced MultiLevelCache to handle multiple cache backends
+- Updated config files with new performance settings
+
+## [2.0.0] - 2026-04-07
+
+### Added
+
+#### Performance Layer
+- Server class with Swoole, Workerman, RoadRunner adapter support
+- WorkerPool for pre-fork worker management
+- SharedMemory for inter-process communication
+- InterProcessCache for fast IPC caching
+- RadixRouter with O(1) tree-based route matching
+- Server configuration (config/server.php)
+
+#### Security Layer (Enterprise-Grade)
+- IPBlocker with auto-ban, CIDR blocking, geo-blocking, ASN filtering
+- DDoSProtection with TrafficAnalyzer, Challenge (JS, Math, CAPTCHA)
+- WAF (Web Application Firewall) with rule-based filtering
+- RequestFilter for method, content-type, size validation
+- LoginThrottler for brute force protection
+- PasswordHasher with Bcrypt/Argon support
+- TwoFactor with TOTP (Google Authenticator compatible)
+- SessionGuard with IP/UserAgent verification
+- CSRFToken for form protection
+- Encrypter with AES-256-GCM
+- Hasher with HMAC support
+- TokenGenerator (bearer, basic auth)
+- AuditLogger with channels (security, auth, api, system)
+- AlertManager with email, Slack, Telegram support
+
+#### Resilience Layer
+- CircuitBreaker for failure isolation
+- FallbackHandler for graceful degradation
+- RetryPolicy with exponential backoff
+- TimeoutHandler for request timeouts
+- Bulkhead for resource isolation
+
+#### Configuration
+- config/security.php - All security settings
+- config/server.php - Server and worker configuration
+
+#### Documentation
+- COMPARE.md updated with 15 frameworks and realistic benchmarks
+- Zen v2.0 ranked #1 PHP framework (200K+ req/sec)
+
+### Changed
+- Enhanced Route class with middleware support
+- Performance optimization targets
+
+## [1.0.1] - 2026-04-07
+
+### Added
+
+#### Event System
+- Event class for event data and propagation control
+- EventDispatcher with listen, dispatch, subscribe methods
+- Priority-based listener ordering
+- Wildcard event pattern support
+
+#### Queue System
+- Job base class with handle, failed, retryAfter methods
+- QueueManager with Sync, Database, and Redis drivers
+- JobPayload for queue processing
+- Configurable queue names
+
+#### Mail System
+- Mail class for email composition
+- Mailer with Log, Sendmail, and SMTP drivers
+- From, to, subject, body, attachments support
+- Raw email sending helper
+
+#### Storage System
+- Storage class with Local, S3, and FTP drivers
+- File operations: put, get, delete, copy, move
+- Directory operations: files, directories, makeDirectory
+- URL generation and file download
+- Zip and extract support
+
+#### API Resources
+- Resource class for JSON transformation
+- ResourceCollection for transforming collections
+- ApiResponse helper with success, error, pagination methods
+
+#### Rate Limiting
+- RateLimiter with File, Database, and Redis drivers
+- ThrottleRequests middleware for route protection
+- X-RateLimit headers support
+
+#### Enhanced Request
+- UploadedFile class for file uploads
+- File validation and storage methods
+- URL/Path helpers
+- Route pattern matching
+- Input validation helper
+
+#### Enhanced Response
+- Cookie management
+- Download response
+- Stream response
+- Redirect to route by name
+
+### Changed
+- Request and Response now use protected properties instead of readonly for better extensibility
+- Added 20+ new methods to Request class
+- Added 30+ new methods to Response class
 
 ## [1.0.0] - 2026-04-07
 
@@ -104,11 +309,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Upgrade Notes
 
-### v1.0.0
+### v3.0.0 (Enterprise)
+- Requires PHP 8.5+ (upgraded from 8.4+)
+- New version command: `php zen -v`
+- Enhanced .gitignore for enterprise security
+- Cleaner directory structure (orphaned dirs removed)
+- All type declarations improved
+- Critical HTTP scheme bug fixed
+
+### v2.1.0
+- Requires PHP 8.4+
+- Performance and caching enhancements
+- Advanced rate limiting and security
+
+### v2.0.0
 - Requires PHP 8.4+
 - New CLI commands available
 - Strict routing now enforced (separate route files)
 - All imports must use top-level `use` statements
 
-### Future Versions
-- Stay tuned for more features and improvements!
+### v1.0.0
+- Initial stable release
+- Core framework features
+- 40+ CLI commands

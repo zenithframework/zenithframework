@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
-use Zen\Boot\RouteLoader;
+use Zenith\Container;
+use Zenith\Boot\RouteLoader;
 
 class RouteList extends Command
 {
@@ -14,7 +14,7 @@ class RouteList extends Command
         $compact = in_array('--compact', $arguments);
         $json = in_array('--json', $arguments);
         
-        $router = $container->make(\Zen\Routing\Router::class);
+        $router = $container->make(\Zenith\Routing\Router::class);
         $routes = $router->getRoutes();
         
         if (empty($routes)) {

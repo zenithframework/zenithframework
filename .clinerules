@@ -1,0 +1,97 @@
+# Claude Rules for Zen Framework
+
+You are an expert PHP developer working with Zen Framework v3.0 (PHP 8.5+).
+
+## Critical Rules
+
+### 1. Import System
+- ALWAYS use top-level `use` statements at file beginning
+- NEVER use fully qualified namespace prefixes inline (e.g., `\Zen\...`)
+- When creating new namespaces, add to `boot/Autoloader.php`
+
+```php
+// ❌ WRONG
+$result = \Zen\Http\Response::json($data);
+
+// ✅ CORRECT
+use Zen\Http\Response;
+$result = Response::json($data);
+```
+
+### 2. Code Quality
+- All PHP files MUST start with `declare(strict_types=1);`
+- Follow PSR-12 coding standards
+- Use PHP 8.5 features: property hooks, asymmetric visibility, attributes
+- Use helper functions: `app()`, `config()`, `view()`, `response()`, `redirect()`, `json()`, `session()`, `auth()`
+
+### 3. Testing & Verification
+After ANY code change:
+1. Run `php zen lint` to check syntax and style
+2. Run `php zen test` to run test suite
+3. Fix any errors before considering task complete
+
+### 4. File Structure
+- Controllers: `app/Http/Controllers/`
+- Models: `app/Models/`
+- Middleware: `app/Http/Middleware/`
+- Requests: `app/Http/Requests/`
+- Services: `app/Services/`
+- Providers: `app/Providers/`
+- UI Components: `app/UI/Components/`
+- Migrations: `database/migrations/`
+- Seeders: `database/seeders/`
+- Factories: `database/factories/`
+
+### 5. Routing
+Routes are organized by purpose:
+- `routes/Web.php` - Public web routes (prefix: `/`)
+- `routes/Api.php` - API routes (prefix: `/api`)
+- `routes/Auth.php` - Authentication routes (prefix: `/auth`)
+- `routes/Ai.php` - AI routes (prefix: `/ai`)
+
+### 6. Security
+- NEVER expose secrets, API keys, or passwords
+- Use parameterized queries (ORM handles this)
+- Validate all user input with form requests
+- Apply middleware for authentication/authorization
+
+### 7. Database
+- Default connection: SQLite
+- Use migrations for schema changes
+- Test migrations with `php zen migrate --rollback`
+- Use factories for test data
+
+### 8. CLI Commands
+Create commands in `core/Console/Commands/`, register in `zen` file:
+```bash
+php zen make:model User
+php zen make:controller UserController
+php zen make:migration create_users_table
+php zen make:service UserService
+php zen migrate
+php zen lint
+php zen test
+```
+
+## Workflow
+
+1. **Understand**: Read relevant files before making changes
+2. **Pattern Match**: Follow existing code structure exactly
+3. **Implement**: Make changes with proper imports and style
+4. **Verify**: Run `php zen lint` and `php zen test`
+5. **Document**: Update documentation if adding features
+
+## Reference Files
+- `AGENTS.md` - Detailed AI agent instructions
+- `AI_AGENT_GUIDE.md` - Comprehensive AI guide
+- `SYNTAX.md` - PHP 8.5+ syntax guide
+- `CLI_COMMANDS.md` - All CLI commands
+- `README.md` - Project overview
+
+## Things to Avoid
+- ❌ Inline namespace prefixes
+- ❌ Skipping tests after changes
+- ❌ Hardcoding secrets
+- ❌ Deleting migrations without approval
+- ❌ Committing broken code
+- ❌ Assuming patterns - verify first

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zen\Validation;
+namespace Zenith\Validation;
 
 class Validator
 {
@@ -46,6 +46,19 @@ class Validator
     public function errors(): array
     {
         return $this->errors;
+    }
+
+    public function validated(): array
+    {
+        $validated = [];
+        
+        foreach ($this->rules as $field => $ruleString) {
+            if (isset($this->data[$field])) {
+                $validated[$field] = $this->data[$field];
+            }
+        }
+        
+        return $validated;
     }
 
     protected function validateField(string $field, string $rule): void
@@ -236,7 +249,7 @@ class Validator
         $table = $parts[0] ?? $field . 's';
         $column = $parts[1] ?? $field;
 
-        $qb = new \Zen\Database\QueryBuilder();
+        $qb = new \Zenith\Database\QueryBuilder();
         $qb->table($table);
         $qb->where($column, $value);
 
@@ -253,7 +266,7 @@ class Validator
         $table = $parts[0] ?? $field . 's';
         $column = $parts[1] ?? $field;
 
-        $qb = new \Zen\Database\QueryBuilder();
+        $qb = new \Zenith\Database\QueryBuilder();
         $qb->table($table);
         $qb->where($column, $value);
 

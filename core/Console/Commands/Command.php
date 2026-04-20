@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zen\Console\Commands;
+namespace Zenith\Console\Commands;
 
-use Zen\Container;
+use Zenith\Container;
 
 abstract class Command
 {
@@ -36,7 +36,11 @@ abstract class Command
     protected function confirm(string $question): bool
     {
         echo "{$question} (yes/no) ";
-        $answer = trim(fgets(STDIN));
+        $answer = fgets(STDIN);
+        if ($answer === false) {
+            return false;
+        }
+        $answer = trim($answer);
         return strtolower($answer) === 'yes' || strtolower($answer) === 'y';
     }
 
@@ -44,7 +48,11 @@ abstract class Command
     {
         $suffix = $default !== null ? " [{$default}]" : '';
         echo "{$question}{$suffix}: ";
-        $answer = trim(fgets(STDIN));
+        $answer = fgets(STDIN);
+        if ($answer === false) {
+            return $default ?? '';
+        }
+        $answer = trim($answer);
         return $answer !== '' ? $answer : ($default ?? '');
     }
 }
