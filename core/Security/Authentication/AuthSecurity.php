@@ -17,6 +17,10 @@ class LoginThrottler
         if (!is_dir($this->storagePath)) {
             mkdir($this->storagePath, 0755, true);
         }
+
+        // Load persisted attempt state; without this the throttle counters
+        // reset on every request and brute-force protection is defeated.
+        $this->load();
     }
 
     public function recordAttempt(string $identifier, bool $success): void
@@ -105,7 +109,13 @@ class LoginThrottler
     protected function persist(): void
     {
         $file = $this->storagePath . '/login_attempts.json';
-        file_put_contents($file, json_encode($this->attempts));
+        $tmp = $file . '.' . getmypid() . '.tmp';
+
+        // Write to a temp file and rename atomically so concurrent requests
+        // cannot observe a partially written file.
+        if (file_put_contents($tmp, json_encode($this->attempts), LOCK_EX) !== false) {
+            @rename($tmp, $file);
+        }
     }
 
     protected function load(): void
@@ -167,11 +177,6 @@ class PasswordHasher
     {
         return bin2hex(random_bytes($length / 2));
     }
-
-    public static function quickHash(string $password): string
-    {
-        return hash('sha256', $password . config('app.key') ?? 'zen');
-    }
 }
 
 class TwoFactor
@@ -194,15 +199,19 @@ class TwoFactor
 
     public function verify(string $secret, string $code): bool
     {
-        $code = (int) $code;
-        
+        // Only accept exactly six decimal digits. Loose (int) casting here
+        // previously allowed codes like "000123x" or "123abc".
+        if (!preg_match('/^\d{6}$/', $code)) {
+            return false;
+        }
+
         for ($i = -2; $i <= 2; $i++) {
-            $expected = $this->getCode($secret, $i);
-            if (hash_equals((string) $expected, (string) $code)) {
+            $expected = str_pad((string) $this->getCode($secret, $i), 6, '0', STR_PAD_LEFT);
+            if (hash_equals($expected, $code)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 

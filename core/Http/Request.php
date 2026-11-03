@@ -19,7 +19,7 @@ class Request
     public function __construct()
     {
         $this->method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-        $this->uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+        $this->uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
         $this->query = $_GET;
         $this->body = $this->parseBody();
         $this->headers = $this->parseHeaders();
@@ -195,9 +195,15 @@ class Request
         return $this->userAgent;
     }
 
+    public function isSecure(): bool
+    {
+        $https = $_SERVER['HTTPS'] ?? $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+        return $https === 'on' || $https === '1' || $https === 'https';
+    }
+
     public function root(): string
     {
-        $scheme = $_SERVER['HTTPS'] ?? 'off' === 'on' ? 'https' : 'http';
+        $scheme = $this->isSecure() ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         return $scheme . '://' . $host;
     }
@@ -393,6 +399,15 @@ class UploadedFile
     public function store(string $path, ?string $name = null): ?string
     {
         $name = $name ?? $this->getClientOriginalName();
+
+        // Reject traversal and normalize the filename so an attacker-controlled
+        // upload name cannot escape the intended storage directory.
+        $name = str_replace(['\\', '/'], '', basename(str_replace('\\', '/', $name)));
+
+        if ($name === '' || $name === '.' || $name === '..' || str_contains($name, "\0")) {
+            return null;
+        }
+
         $fullPath = dirname(__DIR__, 2) . '/storage/' . trim($path, '/') . '/' . $name;
         
         if ($this->move($fullPath)) {

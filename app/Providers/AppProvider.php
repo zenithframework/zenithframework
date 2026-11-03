@@ -25,7 +25,12 @@ class AppProvider extends ServiceProvider
 
     public function boot(): void
     {
-        session()->set('csrf_token', csrf_token());
+        // Store the CSRF token under the exact key the Csrf middleware and
+        // SanitizationService read (`_token`). Previously this wrote
+        // `csrf_token`, so validation always failed or diverged.
+        if (!session()->has('_token')) {
+            session()->set('_token', csrf_token());
+        }
         
         // Register SSR/ISR services
         SsrServiceProvider::boot();

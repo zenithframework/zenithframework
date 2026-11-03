@@ -24,28 +24,27 @@ class WAF
     {
         $this->rules = [
             'sql_injection' => [
-                'pattern' => '/(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|TRUNCATE)\b)|(--)|(\/\*)|(\*\/)/
-i',
+                'pattern' => '/(\bUNION\b[\s\S]{0,20}\bSELECT\b)|(\bSELECT\b[\s\S]{0,60}\bFROM\b)|(\bINSERT\s+INTO\b)|(\bUPDATE\b[\s\S]{0,40}\bSET\b)|(\bDELETE\s+FROM\b)|(\bDROP\s+(TABLE|DATABASE)\b)|(\bALTER\s+TABLE\b)|(\bTRUNCATE\s+TABLE\b)|(\bSLEEP\s*\()|(\bBENCHMARK\s*\()|(\bLOAD_FILE\s*\()|(\bINFORMATION_SCHEMA\b)|(\bOR\b\s+\d+\s*=\s*\d+)|(\'\s*OR\s*\')|(--\s)|(\/\*[\s\S]*?\*\/)/i',
                 'score' => 100,
                 'action' => 'block',
             ],
             'xss_basic' => [
-                'pattern' => '/<script|javascript:|on(load|error|click|mouse)/i',
+                'pattern' => '/(<script|<\s*\/?\s*(iframe|object|embed|svg|math)|javascript\s*:|vbscript\s*:|data\s*:text\/html|on(load|error|click|mouse|focus|blur|submit|change|input|key)\s*=)/i',
                 'score' => 80,
                 'action' => 'block',
             ],
             'xss_attr' => [
-                'pattern' => '/(\bon\w+\s*=)|(expression\s*\()/i',
+                'pattern' => '/(\bon\w+\s*=)|(expression\s*\()|(url\s*\(\s*[' . '\'"]?\s*javascript)/i',
                 'score' => 70,
                 'action' => 'block',
             ],
             'path_traversal' => [
-                'pattern' => '/(\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%2e%2e\/)/i',
+                'pattern' => '/(\.\.\/)|(\.\.\\\\)|(%2e%2e%2f)|(%2e%2e\/)|(%252e%252e)|(\.\.%2f)|(%2e%2e%5c)/i',
                 'score' => 60,
                 'action' => 'block',
             ],
             'command_injection' => [
-                'pattern' => '/(;\s*\/bin\/sh)|(\|\s*cat)|(\&\&.*rm)|(passwd)|(shadow)/i',
+                'pattern' => '/(;\s*(\/bin\/|sh\b|bash\b|cmd\b|powershell|whoami|id\b|cat\b|wget\b|curl\b))|(\|\s*(cat|nc|bash|sh|whoami|id)\b)|(\$\([^)]*\))|(`[^`]*`)|(\|\||&&\s*(rm|wget|curl|nc|sh|bash)\b)/i',
                 'score' => 100,
                 'action' => 'block',
             ],
@@ -60,14 +59,9 @@ i',
                 'action' => 'sanitize',
             ],
             'null_byte' => [
-                'pattern' => '/(\x00)/',
+                'pattern' => '/(\x00)|(%00)/',
                 'score' => 30,
                 'action' => 'sanitize',
-            ],
-            'base64' => [
-                'pattern' => '/^[A-Za-z0-9+\/]+=*$/',
-                'score' => 20,
-                'action' => 'log',
             ],
             'suspicious_extension' => [
                 'pattern' => '/\.(php\d?|phtml|phar|phpt|asp|aspx|jsp|exe|sh|cgi|pl|py|rb|env|git|config)$/i',
@@ -97,6 +91,13 @@ i',
             'body' => is_array($body) ? json_encode($body) : (string) $body,
         ];
 
+        // Normalize a copy of the aggregate input to defeat trivial obfuscation
+        // (URL-encoding, doubled encoding, whitespace/comment splitting) before
+        // matching. The original is still reported for context.
+        $decoded = rawurldecode($uri . ' ' . $query . ' ' . ($inputs['body'] ?? ''));
+        $decoded = rawurldecode($decoded);
+        $inputs['decoded'] = preg_replace('/\s+/', ' ', $decoded);
+
         foreach ($inputs as $source => $input) {
             if (empty($input)) {
                 continue;
@@ -118,10 +119,10 @@ i',
         }
 
         foreach ($headers as $name => $value) {
-            foreach ($this->rules as $rule) {
+            foreach ($this->rules as $ruleName => $rule) {
                 if (preg_match($rule['pattern'], (string) $value)) {
                     $violations[] = [
-                        'rule' => 'header_injection',
+                        'rule' => $ruleName,
                         'source' => 'header:' . $name,
                         'score' => $rule['score'],
                         'action' => $rule['action'],
@@ -206,9 +207,8 @@ i',
         }
 
         $logFile = $logDir . '/violations.json';
-        $logs = file_exists($logFile) ? json_decode(file_get_contents($logFile), true) : [];
 
-        $logs[] = [
+        $entry = [
             'ip' => $ip,
             'timestamp' => time(),
             'violations' => $violations,
@@ -216,9 +216,33 @@ i',
             'uri' => $_SERVER['REQUEST_URI'] ?? '',
         ];
 
-        $logs = array_slice($logs, -1000);
+        // Use an exclusive lock so concurrent requests cannot corrupt or lose
+        // log entries, and cap the file size to avoid unbounded growth/DoS.
+        $handle = fopen($logFile, 'c+');
+        if ($handle === false) {
+            return;
+        }
 
-        file_put_contents($logFile, json_encode($logs));
+        try {
+            if (!flock($handle, LOCK_EX)) {
+                return;
+            }
+
+            $size = filesize($logFile) ?: 0;
+            $logs = $size > 0 ? (json_decode(stream_get_contents($handle), true) ?: []) : [];
+
+            $logs[] = $entry;
+            $logs = array_slice($logs, -1000);
+
+            ftruncate($handle, 0);
+            rewind($handle);
+            fwrite($handle, json_encode($logs));
+
+            fflush($handle);
+            flock($handle, LOCK_UN);
+        } finally {
+            fclose($handle);
+        }
 
         if ($score > 80) {
             $blocker = new IPBlocker();

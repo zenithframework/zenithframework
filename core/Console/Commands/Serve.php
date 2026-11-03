@@ -22,6 +22,18 @@ class Serve extends Command
             }
         }
 
+        // Validate and sanitize CLI arguments before interpolating them into a
+        // shell command, to prevent command injection via --host/--port.
+        if (!filter_var($host, FILTER_VALIDATE_IP)) {
+            $this->error("Invalid host address: {$host}");
+            return;
+        }
+
+        if ($port < 1 || $port > 65535) {
+            $this->error("Invalid port: {$port}");
+            return;
+        }
+
         $this->info("🚀 Starting Zen Framework development server...");
         $this->info("http://{$host}:{$port}");
         $this->line("Press Ctrl+C to stop the server\n");
@@ -33,7 +45,12 @@ class Serve extends Command
             return;
         }
         
-        $command = sprintf('php -S %s:%d -t %s', $host, $port, $publicDir);
+        $command = sprintf(
+            'php -S %s:%d -t %s',
+            escapeshellarg($host),
+            $port,
+            escapeshellarg($publicDir)
+        );
         
         system($command);
     }

@@ -37,7 +37,9 @@ class AiController
             
             return json(['response' => $response]);
         } catch (\Throwable $e) {
-            return json(['error' => $e->getMessage()], 500);
+            // Do not leak internal exception details to the client.
+            \Zenith\Log\Logger::error('AI chat request failed: ' . $e->getMessage());
+            return json(['error' => 'The AI request could not be completed.'], 500);
         }
     }
 
@@ -64,11 +66,13 @@ class AiController
                 ->model('gpt-3.5-turbo')
                 ->apiKey($apiKey);
             
-            $response = $ai->send();
+            $response = $ai->withUserMessage($prompt)->send();
             
             return json(['completion' => $response]);
         } catch (\Throwable $e) {
-            return json(['error' => $e->getMessage()], 500);
+            // Do not leak internal exception details to the client.
+            \Zenith\Log\Logger::error('AI completion request failed: ' . $e->getMessage());
+            return json(['error' => 'The AI request could not be completed.'], 500);
         }
     }
 }

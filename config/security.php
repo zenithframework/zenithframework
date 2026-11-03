@@ -41,12 +41,12 @@ return [
     
     'session' => [
         'name' => 'zen_session',
-        'lifetime' => 7200,
+        'lifetime' => (int) env('SESSION_LIFETIME', 120) * 60,
         'regenerate' => true,
         'httponly' => true,
-        'secure' => false,
-        'samesite' => 'Strict',
-        'verify_ip' => true,
+        'secure' => env('APP_ENV', 'production') === 'production',
+        'samesite' => 'Lax',
+        'verify_ip' => false,
         'verify_user_agent' => true,
         'timeout' => true,
     ],

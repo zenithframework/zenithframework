@@ -27,16 +27,6 @@ class Hasher
         $this->algo = $algo;
     }
 
-    public static function md5(string $data): string
-    {
-        return md5($data);
-    }
-
-    public static function sha1(string $data): string
-    {
-        return sha1($data);
-    }
-
     public static function uuid(): string
     {
         return sprintf(
@@ -61,66 +51,85 @@ class Encrypter
 
     public function __construct(?string $key = null)
     {
-        $this->key = $key ?? config('app.key') ?? bin2hex(random_bytes(32));
-        
-        if (strlen($this->key) < 32) {
-            $this->key = str_pad($this->key, 32, $this->key);
+        $rawKey = $key ?? config('app.key') ?? null;
+
+        if ($rawKey === null || $rawKey === '') {
+            throw new \RuntimeException(
+                'Encryption key is not configured. Set APP_KEY in your .env file before using the Encrypter.'
+            );
         }
-        
-        $this->key = substr($this->key, 0, 32);
+
+        // Support Laravel-style "base64:" prefixed keys.
+        if (str_starts_with($rawKey, 'base64:')) {
+            $decoded = base64_decode(substr($rawKey, 7), true);
+            if ($decoded !== false) {
+                $rawKey = $decoded;
+            }
+        }
+
+        if (strlen($rawKey) < 32) {
+            throw new \RuntimeException('Encryption key must be at least 32 bytes (256 bits).');
+        }
+
+        // Derive a fixed-length 256-bit key. Hash the key material rather than
+        // padding/truncating, which would weaken the key (e.g. "abcabcabc...").
+        $this->key = hash('sha256', $rawKey, true);
     }
 
     public function encrypt(string $data, ?string $iv = null): string
     {
         $iv = $iv ?? random_bytes($this->ivLength);
-        
+        $tag = '';
+
         $ciphertext = openssl_encrypt(
             $data,
             $this->cipher,
             $this->key,
             OPENSSL_RAW_DATA,
-            $iv
+            $iv,
+            $tag
         );
-        
-        $tag = '';
-        if (function_exists('openssl_encrypt')) {
-            $tag = openssl_encrypt(
-                $iv . $ciphertext,
-                'aes-256-gcm',
-                $this->key,
-                OPENSSL_RAW_DATA | OPENSSL_NO_PADDING,
-                $iv
-            );
-            $tag = substr($tag, -16);
+
+        if ($ciphertext === false) {
+            throw new \RuntimeException('Encryption failed');
         }
-        
+
         return base64_encode($iv . $tag . $ciphertext);
     }
 
     public function decrypt(string $data): string
     {
         $decoded = base64_decode($data, true);
-        
+
         if ($decoded === false) {
             throw new \RuntimeException('Invalid encrypted data');
         }
-        
+
+        $tagLength = 16;
+        if (strlen($decoded) < $this->ivLength + $tagLength) {
+            throw new \RuntimeException('Invalid encrypted data');
+        }
+
         $iv = substr($decoded, 0, $this->ivLength);
-        $tag = substr($decoded, $this->ivLength, 16);
-        $ciphertext = substr($decoded, $this->ivLength + 16);
-        
+        $tag = substr($decoded, $this->ivLength, $tagLength);
+        $ciphertext = substr($decoded, $this->ivLength + $tagLength);
+
+        // Fail closed: GCM authentication tag is verified here. If the tag is
+        // missing or wrong, openssl_decrypt returns false and we must not
+        // return unauthenticated plaintext.
         $decrypted = openssl_decrypt(
             $ciphertext,
             $this->cipher,
             $this->key,
             OPENSSL_RAW_DATA,
-            $iv
+            $iv,
+            $tag
         );
-        
+
         if ($decrypted === false) {
-            throw new \RuntimeException('Decryption failed');
+            throw new \RuntimeException('Decryption failed (authentication tag mismatch)');
         }
-        
+
         return $decrypted;
     }
 

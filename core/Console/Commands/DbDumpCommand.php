@@ -75,12 +75,20 @@ class DbDumpCommand extends Command
         while ($row = $tables->fetchArray(\SQLITE3_NUM)) {
             $tableName = $row[0];
 
+            // Validate the table name against the actual schema before it is
+            // interpolated into SQL, to avoid SQL injection via crafted
+            // sqlite_master entries.
+            if (!preg_match('/^[A-Za-z0-9_]+$/', $tableName)) {
+                $this->error("Skipping table with unsafe name: {$tableName}");
+                continue;
+            }
+
             // Get CREATE TABLE statement
-            $createStmt = $sqlite->querySingle("SELECT sql FROM sqlite_master WHERE type='table' AND name='{$tableName}'");
+            $createStmt = $sqlite->querySingle("SELECT sql FROM sqlite_master WHERE type='table' AND name=" . $sqlite->escapeString($tableName));
             $dump .= "{$createStmt};\n\n";
 
             // Export data
-            $data = $sqlite->query("SELECT * FROM '{$tableName}'");
+            $data = $sqlite->query("SELECT * FROM \"{$tableName}\"");
             $columns = [];
             $numColumns = $data->numColumns();
 
@@ -96,7 +104,7 @@ class DbDumpCommand extends Command
                     return "'" . $sqlite->escapeString((string) $value) . "'";
                 }, $row);
 
-                $dump .= "INSERT INTO '{$tableName}' VALUES (" . implode(', ', $values) . ");\n";
+                $dump .= "INSERT INTO \"{$tableName}\" VALUES (" . implode(', ', $values) . ");\n";
             }
 
             $dump .= "\n";

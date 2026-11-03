@@ -22,7 +22,10 @@ class Csrf implements MiddlewareInterface
             $token = $request->header('X-CSRF-TOKEN') ?? $request->input('_token');
             $sessionToken = session()->get('_token');
 
-            if (!$token || $token !== $sessionToken) {
+            // Use a constant-time comparison to prevent timing attacks, and
+            // reject when either side is empty.
+            if (!is_string($token) || !is_string($sessionToken) || $sessionToken === ''
+                || !hash_equals($sessionToken, $token)) {
                 return new Response(json_encode(['error' => 'CSRF token mismatch']), 419, ['Content-Type' => 'application/json']);
             }
         }

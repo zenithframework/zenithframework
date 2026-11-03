@@ -326,7 +326,23 @@ class LocalDriver implements StorageDriver
 
     public function path(string $path): string
     {
-        return $this->root . '/' . ltrim($path, '/');
+        // Normalize and confine the resolved path to the storage root to block
+        // directory traversal (e.g. "../../etc/passwd").
+        $normalized = str_replace('\\', '/', $path);
+        $segments = [];
+
+        foreach (explode('/', $normalized) as $segment) {
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+            if ($segment === '..') {
+                array_pop($segments);
+                continue;
+            }
+            $segments[] = $segment;
+        }
+
+        return $this->root . '/' . implode('/', $segments);
     }
 }
 
